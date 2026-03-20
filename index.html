@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>种菜日历 · Veggie Calendar for Chinese Families</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background-color: #f9f9f6; font-family: 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif; }
+
+    .nav-link { position: relative; transition: color 0.2s; }
+    .nav-link::after { content:''; position:absolute; bottom:-2px; left:0; width:0; height:2px; background:#52b788; transition:width 0.3s; }
+    .nav-link:hover::after { width: 100%; }
+
+    .veggie-card { transition: transform 0.2s, box-shadow 0.2s; }
+    .veggie-card:hover { transform: translateY(-5px); box-shadow: 0 12px 28px rgba(0,0,0,0.13); }
+
+    .filter-btn { transition: all 0.2s; }
+    .filter-btn.active { background: #2d6a4f; color: white; border-color: #2d6a4f; }
+
+    .zone-btn { transition: all 0.2s; }
+
+    .accordion-arrow { transition: transform 0.3s; }
+    .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+    .accordion-content.open { max-height: 3000px; }
+
+    .hero-bg { background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 50%, #40916c 100%); }
+
+    .month-now-col { background: #fefce8 !important; }
+    .month-now-header { background: #ca8a04 !important; }
+
+    .cell-indoor { background: #dbeafe; border: 1px solid #93c5fd; border-radius: 4px; }
+    .cell-direct { background: #fef9c3; border: 1px solid #fde047; border-radius: 4px; }
+    .cell-transplant { background: #dcfce7; border: 1px solid #86efac; border-radius: 4px; }
+    .cell-harvest { background: #ffedd5; border: 1px solid #fdba74; border-radius: 4px; }
+
+    #veggieModal { display: none; }
+    #veggieModal.show { display: flex; }
+
+    @keyframes fadeIn { from { opacity:0; transform:scale(0.95); } to { opacity:1; transform:scale(1); } }
+    .modal-box { animation: fadeIn 0.2s ease; }
+
+    .section-title { position: relative; display: inline-block; }
+    .section-title::after { content:''; position:absolute; bottom:-6px; left:0; width:100%; height:3px; background: linear-gradient(90deg,#52b788,transparent); border-radius:2px; }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; }
+    ::-webkit-scrollbar-thumb { background: #52b788; border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- ===== STICKY NAV ===== -->
+<nav class="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <span class="text-2xl">🌱</span>
+      <div class="leading-tight">
+        <div class="font-bold text-green-900 text-lg">种菜日历</div>
+        <div class="text-xs text-gray-400 -mt-0.5">Veggie Calendar</div>
+      </div>
+    </div>
+    <!-- Desktop nav -->
+    <div class="hidden md:flex items-center gap-7">
+      <button onclick="scrollTo('gallery')"    class="nav-link text-sm font-medium text-gray-600 hover:text-green-700">🥬 蔬菜图鉴</button>
+      <button onclick="scrollTo('calendar')"   class="nav-link text-sm font-medium text-gray-600 hover:text-green-700">📅 播种指南</button>
+      <button onclick="scrollTo('fertilizer')" class="nav-link text-sm font-medium text-gray-600 hover:text-green-700">🌿 施肥指南</button>
+      <button onclick="scrollTo('seeds')"      class="nav-link text-sm font-medium text-gray-600 hover:text-green-700">🛒 购种推荐</button>
+    </div>
+    <!-- Mobile nav -->
+    <div class="flex md:hidden items-center gap-3 text-xs text-gray-500">
+      <button onclick="scrollTo('gallery')">图鉴</button>
+      <button onclick="scrollTo('calendar')">日历</button>
+      <button onclick="scrollTo('fertilizer')">施肥</button>
+      <button onclick="scrollTo('seeds')">购种</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero-bg text-white py-16 px-4">
+  <div class="max-w-4xl mx-auto text-center">
+    <p class="text-green-300 text-sm uppercase tracking-widest mb-3">For Overseas Chinese Families · 海外华人种菜指南</p>
+    <h1 class="text-4xl md:text-5xl font-bold mb-4 leading-tight">在海外，种一口<br>家乡的味道</h1>
+    <p class="text-green-200 text-base md:text-lg max-w-xl mx-auto">根据你所在地的 USDA 温度带，告诉你什么时候种、种什么、怎么施肥</p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <button onclick="scrollTo('gallery')"  class="bg-white text-green-800 px-6 py-2.5 rounded-full font-semibold hover:bg-green-50 transition text-sm">查看蔬菜图鉴 →</button>
+      <button onclick="scrollTo('calendar')" class="border border-white text-white px-6 py-2.5 rounded-full hover:bg-white hover:text-green-800 transition text-sm">播种日历</button>
+    </div>
+    <div class="mt-8 flex flex-wrap justify-center gap-4 text-xs text-green-300">
+      <span>🗓️ 现在是 3月 · 春耕好时节</span>
+      <span>·</span>
+      <span>🌍 适用 USDA Zone 5 – 9</span>
+      <span>·</span>
+      <span>🥬 21 种中国蔬菜</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ZONE FINDER ===== -->
+<section id="zonefinder" class="py-10 px-4 bg-white border-b border-gray-100">
+  <div class="max-w-2xl mx-auto">
+    <div class="text-center mb-6">
+      <h2 class="text-xl font-bold text-green-900">📍 查询我所在地的温度带</h2>
+      <p class="text-gray-400 text-sm mt-1">输入城市名（中文或英文），自动识别 USDA Zone</p>
+    </div>
+    <div class="relative">
+      <input id="cityInput" type="text" placeholder="例如：纽约 / New York / Chicago / Vancouver…"
+        class="w-full border-2 border-green-200 focus:border-green-500 rounded-2xl px-5 py-3.5 text-base outline-none transition pr-12"
+        oninput="onCityInput(this.value)" autocomplete="off">
+      <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 text-xl">🔍</span>
+      <!-- Dropdown suggestions -->
+      <div id="citySuggestions" class="hidden absolute z-20 w-full bg-white border border-gray-100 rounded-2xl shadow-xl mt-1 max-h-64 overflow-y-auto"></div>
+    </div>
+    <!-- Result card -->
+    <div id="zoneResult" class="hidden mt-4"></div>
+    <p class="text-center text-xs text-gray-300 mt-3">收录美国 + 加拿大 140+ 主要城市 · 支持中英文搜索</p>
+  </div>
+</section>
+
+<!-- ===== VEGGIE GALLERY ===== -->
+<section id="gallery" class="py-14 px-4">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-10">
+      <h2 class="text-2xl md:text-3xl font-bold text-green-900 section-title">🥬 蔬菜图鉴</h2>
+      <p class="text-gray-400 mt-4 text-sm">Vegetable Encyclopedia · 点击蔬菜查看详细种植时间</p>
+    </div>
+
+    <!-- Zone selector for cards -->
+    <div class="flex items-center justify-center gap-2 mb-5 flex-wrap">
+      <span class="text-xs text-gray-500">我的温度带：</span>
+      <div class="flex gap-1" id="galleryZoneBtns">
+        <button onclick="setGalleryZone(5)" id="gz5" class="gz-btn text-xs px-3 py-1 rounded-full bg-green-700 text-white font-medium">Zone 5</button>
+        <button onclick="setGalleryZone(6)" id="gz6" class="gz-btn text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-600">Zone 6</button>
+        <button onclick="setGalleryZone(7)" id="gz7" class="gz-btn text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-600">Zone 7</button>
+        <button onclick="setGalleryZone(8)" id="gz8" class="gz-btn text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-600">Zone 8</button>
+        <button onclick="setGalleryZone(9)" id="gz9" class="gz-btn text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-600">Zone 9</button>
+      </div>
+    </div>
+
+    <!-- Type filter -->
+    <div class="flex flex-wrap justify-center gap-2 mb-8" id="filterBtns">
+      <button class="filter-btn active px-4 py-1.5 rounded-full border border-green-700 text-sm" data-type="all" onclick="filterVeggies(this,'all')">全部</button>
+      <button class="filter-btn px-4 py-1.5 rounded-full border border-green-700 text-sm text-green-700" data-type="叶菜" onclick="filterVeggies(this,'叶菜')">🥬 叶菜</button>
+      <button class="filter-btn px-4 py-1.5 rounded-full border border-green-700 text-sm text-green-700" data-type="瓜果" onclick="filterVeggies(this,'瓜果')">🍅 瓜果</button>
+      <button class="filter-btn px-4 py-1.5 rounded-full border border-green-700 text-sm text-green-700" data-type="豆类" onclick="filterVeggies(this,'豆类')">🫘 豆类</button>
+      <button class="filter-btn px-4 py-1.5 rounded-full border border-green-700 text-sm text-green-700" data-type="葱蒜" onclick="filterVeggies(this,'葱蒜')">🧅 葱蒜</button>
+      <button class="filter-btn px-4 py-1.5 rounded-full border border-green-700 text-sm text-green-700" data-type="香草" onclick="filterVeggies(this,'香草')">🌿 香草</button>
+    </div>
+
+    <!-- Card grid -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4" id="veggieGrid"></div>
+  </div>
+</section>
+
+<!-- ===== VEGGIE MODAL ===== -->
+<div id="veggieModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 items-center justify-center p-4" onclick="closeModal(event)">
+  <div class="modal-box bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<!-- ===== PLANTING CALENDAR ===== -->
+<section id="calendar" class="py-14 px-4 bg-green-50">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-10">
+      <h2 class="text-2xl md:text-3xl font-bold text-green-900 section-title">📅 按月播种指南</h2>
+      <p class="text-gray-400 mt-4 text-sm">Monthly Planting Guide · 选择你的 USDA 温度带查看全年日历</p>
+    </div>
+
+    <!-- Zone tabs -->
+    <div class="flex flex-wrap justify-center gap-2 mb-8">
+      <button onclick="setCalZone(5)" id="cz5" class="cz-btn text-sm px-4 py-2 rounded-lg font-medium bg-green-700 text-white">
+        Zone 5 <span class="hidden sm:inline text-xs opacity-75 ml-1">Chicago / Toronto</span>
+      </button>
+      <button onclick="setCalZone(6)" id="cz6" class="cz-btn text-sm px-4 py-2 rounded-lg font-medium bg-white text-gray-600 border">
+        Zone 6 <span class="hidden sm:inline text-xs text-gray-400 ml-1">Philadelphia / DC</span>
+      </button>
+      <button onclick="setCalZone(7)" id="cz7" class="cz-btn text-sm px-4 py-2 rounded-lg font-medium bg-white text-gray-600 border">
+        Zone 7 <span class="hidden sm:inline text-xs text-gray-400 ml-1">Seattle / NC</span>
+      </button>
+      <button onclick="setCalZone(8)" id="cz8" class="cz-btn text-sm px-4 py-2 rounded-lg font-medium bg-white text-gray-600 border">
+        Zone 8 <span class="hidden sm:inline text-xs text-gray-400 ml-1">Houston / LA</span>
+      </button>
+      <button onclick="setCalZone(9)" id="cz9" class="cz-btn text-sm px-4 py-2 rounded-lg font-medium bg-white text-gray-600 border">
+        Zone 9 <span class="hidden sm:inline text-xs text-gray-400 ml-1">Bay Area / Miami</span>
+      </button>
+    </div>
+
+    <!-- Calendar table -->
+    <div class="overflow-x-auto rounded-xl shadow-sm">
+      <table class="w-full bg-white text-sm" id="calTable">
+        <thead id="calHead"></thead>
+        <tbody id="calendarBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Legend -->
+    <div class="flex flex-wrap gap-5 mt-5 justify-center text-xs text-gray-600">
+      <span class="flex items-center gap-2"><span class="w-5 h-5 rounded cell-indoor inline-block"></span> 室内育苗 Indoor Sow</span>
+      <span class="flex items-center gap-2"><span class="w-5 h-5 rounded cell-direct inline-block"></span> 直播 Direct Sow</span>
+      <span class="flex items-center gap-2"><span class="w-5 h-5 rounded cell-transplant inline-block"></span> 移植 Transplant</span>
+      <span class="flex items-center gap-2"><span class="w-5 h-5 rounded cell-harvest inline-block"></span> 采收 Harvest</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FERTILIZER GUIDE ===== -->
+<section id="fertilizer" class="py-14 px-4">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-10">
+      <h2 class="text-2xl md:text-3xl font-bold text-green-900 section-title">🌿 施肥指南</h2>
+      <p class="text-gray-400 mt-4 text-sm">Fertilizer Guide · 各蔬菜每个生长阶段的施肥方案</p>
+    </div>
+    <div class="space-y-3" id="fertAccordion"></div>
+  </div>
+</section>
+
+<!-- ===== SEED SHOPPING ===== -->
+<section id="seeds" class="py-14 px-4 bg-green-50">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-10">
+      <h2 class="text-2xl md:text-3xl font-bold text-green-900 section-title">🛒 购种推荐</h2>
+      <p class="text-gray-400 mt-4 text-sm">Seed Shopping Guide · 在哪买中国蔬菜种子最靠谱</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" id="seedShops"></div>
+
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 text-sm text-amber-800">
+      <p class="font-semibold mb-1">💡 省钱小贴士</p>
+      <p>当地亚洲超市（H-Mart、99 Ranch、T&amp;T 等）的种子货架也常有中国蔬菜种子，价格实惠，品种真实可靠，可以先去看看！</p>
+      <p class="mt-2 text-amber-600 text-xs">Asian grocery stores like H-Mart, 99 Ranch, and T&amp;T often stock Chinese vegetable seeds — great price, authentic varieties.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="bg-green-900 text-green-200 py-10 px-4">
+  <div class="max-w-4xl mx-auto text-center">
+    <div class="text-3xl mb-3">🌱</div>
+    <p class="font-bold text-white text-lg">种菜日历 · Veggie Calendar</p>
+    <p class="text-sm mt-1">专为海外华人打造的中国蔬菜种植指南</p>
+    <p class="text-xs mt-4 text-green-400">购种推荐含联盟佣金链接 · Seed shopping links may include affiliate commissions</p>
+    <div class="mt-6 flex justify-center gap-6 text-xs text-green-400">
+      <button onclick="scrollTo('gallery')" class="hover:text-white">蔬菜图鉴</button>
+      <button onclick="scrollTo('calendar')" class="hover:text-white">播种指南</button>
+      <button onclick="scrollTo('fertilizer')" class="hover:text-white">施肥指南</button>
+      <button onclick="scrollTo('seeds')" class="hover:text-white">购种推荐</button>
+    </div>
+  </div>
+</footer>
+
+<script>
+// =============================================
+// CITY → USDA ZONE DATABASE
+// =============================================
+const cityZoneDB = [
+  // ── 美国 东北部 ──
+  {en:'New York City',     zh:'纽约',       alias:'NYC,曼哈顿,Brooklyn,布鲁克林,Queens,法拉盛,Flushing,Bronx,Staten Island', state:'NY', country:'US', zone:7},
+  {en:'Boston',            zh:'波士顿',      alias:'Cambridge,Somerville,Brookline,Newton,Quincy', state:'MA', country:'US', zone:6},
+  {en:'Philadelphia',      zh:'费城',        alias:'Philly,Chester,Bucks', state:'PA', country:'US', zone:7},
+  {en:'Pittsburgh',        zh:'匹兹堡',      alias:'', state:'PA', country:'US', zone:6},
+  {en:'Washington DC',     zh:'华盛顿',      alias:'DC,Alexandria,Arlington,Bethesda,Silver Spring,Rockville', state:'DC', country:'US', zone:7},
+  {en:'Baltimore',         zh:'巴尔的摩',    alias:'', state:'MD', country:'US', zone:7},
+  {en:'Providence',        zh:'普罗维登斯',  alias:'', state:'RI', country:'US', zone:6},
+  {en:'Hartford',          zh:'哈特福德',    alias:'', state:'CT', country:'US', zone:6},
+  {en:'New Haven',         zh:'纽黑文',      alias:'Yale耶鲁', state:'CT', country:'US', zone:7},
+  {en:'Buffalo',           zh:'布法罗',      alias:'Niagara', state:'NY', country:'US', zone:6},
+  {en:'Albany',            zh:'奥尔巴尼',    alias:'', state:'NY', country:'US', zone:5},
+  {en:'Rochester',         zh:'罗切斯特',    alias:'', state:'NY', country:'US', zone:6},
+  {en:'Newark',            zh:'纽瓦克',      alias:'New Jersey,NJ,Jersey City', state:'NJ', country:'US', zone:7},
+  // ── 美国 东南部 ──
+  {en:'Atlanta',           zh:'亚特兰大',    alias:'Marietta,Alpharetta,Duluth,Lawrenceville,Norcross,Sandy Springs', state:'GA', country:'US', zone:8},
+  {en:'Charlotte',         zh:'夏洛特',      alias:'', state:'NC', country:'US', zone:7},
+  {en:'Raleigh',           zh:'罗利',        alias:'Durham,Chapel Hill,Cary,RTP,Research Triangle', state:'NC', country:'US', zone:7},
+  {en:'Richmond',          zh:'里士满',      alias:'', state:'VA', country:'US', zone:7},
+  {en:'Virginia Beach',    zh:'弗吉尼亚海滩',alias:'Norfolk,Chesapeake', state:'VA', country:'US', zone:8},
+  {en:'Nashville',         zh:'纳什维尔',    alias:'', state:'TN', country:'US', zone:7},
+  {en:'Memphis',           zh:'孟菲斯',      alias:'', state:'TN', country:'US', zone:7},
+  {en:'Jacksonville',      zh:'杰克逊维尔',  alias:'', state:'FL', country:'US', zone:9},
+  {en:'Orlando',           zh:'奥兰多',      alias:'Kissimmee,Sanford', state:'FL', country:'US', zone:9},
+  {en:'Tampa',             zh:'坦帕',        alias:'St Petersburg,Clearwater,Brandon', state:'FL', country:'US', zone:9},
+  {en:'Miami',             zh:'迈阿密',      alias:'Fort Lauderdale,Boca Raton,Coral Gables,Hialeah,Kendall', state:'FL', country:'US', zone:9},
+  {en:'New Orleans',       zh:'新奥尔良',    alias:'Baton Rouge', state:'LA', country:'US', zone:9},
+  {en:'Birmingham',        zh:'伯明翰',      alias:'', state:'AL', country:'US', zone:8},
+  {en:'Columbia',          zh:'哥伦比亚',    alias:'', state:'SC', country:'US', zone:8},
+  {en:'Charleston',        zh:'查尔斯顿',    alias:'', state:'SC', country:'US', zone:8},
+  {en:'Savannah',          zh:'萨凡纳',      alias:'', state:'GA', country:'US', zone:9},
+  // ── 美国 中西部 ──
+  {en:'Chicago',           zh:'芝加哥',      alias:'Naperville,Evanston,Schaumburg,Skokie,Oak Park,Lombard,Downers Grove,Lisle,Glenview,Westmont,Bolingbrook,Aurora', state:'IL', country:'US', zone:6},
+  {en:'Detroit',           zh:'底特律',      alias:'Ann Arbor,Dearborn,Warren,Sterling Heights,Troy,Southfield,West Bloomfield,Novi,Livonia', state:'MI', country:'US', zone:6},
+  {en:'Cleveland',         zh:'克利夫兰',    alias:'Akron,Columbus,Cincinnati', state:'OH', country:'US', zone:6},
+  {en:'Columbus',          zh:'哥伦布',      alias:'Dublin,Westerville,Hilliard,Gahanna', state:'OH', country:'US', zone:6},
+  {en:'Cincinnati',        zh:'辛辛那提',    alias:'', state:'OH', country:'US', zone:6},
+  {en:'Indianapolis',      zh:'印第安纳波利斯',alias:'Carmel,Fishers,Zionsville', state:'IN', country:'US', zone:6},
+  {en:'Milwaukee',         zh:'密尔沃基',    alias:'', state:'WI', country:'US', zone:5},
+  {en:'Madison',           zh:'麦迪逊',      alias:'', state:'WI', country:'US', zone:5},
+  {en:'Minneapolis',       zh:'明尼阿波利斯', alias:'Saint Paul,St Paul,Eden Prairie,Minnetonka,Bloomington,Plymouth,Woodbury,Burnsville', state:'MN', country:'US', zone:5},
+  {en:'St. Louis',         zh:'圣路易斯',    alias:'Saint Louis,Clayton', state:'MO', country:'US', zone:6},
+  {en:'Kansas City',       zh:'堪萨斯城',    alias:'Overland Park,Leawood,Shawnee', state:'MO', country:'US', zone:6},
+  {en:'Omaha',             zh:'奥马哈',      alias:'', state:'NE', country:'US', zone:5},
+  {en:'Des Moines',        zh:'得梅因',      alias:'', state:'IA', country:'US', zone:5},
+  {en:'Pittsburgh',        zh:'匹兹堡',      alias:'', state:'PA', country:'US', zone:6},
+  {en:'Louisville',        zh:'路易斯维尔',  alias:'', state:'KY', country:'US', zone:6},
+  // ── 美国 南部/德克萨斯 ──
+  {en:'Houston',           zh:'休斯顿',      alias:'Sugar Land,Katy,Pearland,Missouri City,The Woodlands,Stafford,Pasadena TX', state:'TX', country:'US', zone:9},
+  {en:'Dallas',            zh:'达拉斯',      alias:'Fort Worth,Plano,Irving,Carrollton,Frisco,McKinney,Allen,Richardson,Garland,Mesquite,Arlington', state:'TX', country:'US', zone:8},
+  {en:'Austin',            zh:'奥斯汀',      alias:'Round Rock,Cedar Park,Pflugerville,Georgetown', state:'TX', country:'US', zone:8},
+  {en:'San Antonio',       zh:'圣安东尼奥',  alias:'', state:'TX', country:'US', zone:8},
+  {en:'Oklahoma City',     zh:'俄克拉荷马城', alias:'Norman,Edmond', state:'OK', country:'US', zone:7},
+  {en:'El Paso',           zh:'厄尔帕索',    alias:'', state:'TX', country:'US', zone:8},
+  // ── 美国 西部/科罗拉多 ──
+  {en:'Denver',            zh:'丹佛',        alias:'Aurora,Lakewood,Boulder,Littleton,Westminster,Thornton,Arvada,Englewood,Centennial', state:'CO', country:'US', zone:6},
+  {en:'Salt Lake City',    zh:'盐湖城',      alias:'West Valley,Provo,Orem,Sandy,Murray', state:'UT', country:'US', zone:7},
+  {en:'Albuquerque',       zh:'阿尔伯克基',  alias:'Santa Fe', state:'NM', country:'US', zone:7},
+  {en:'Phoenix',           zh:'凤凰城',      alias:'Scottsdale,Tempe,Mesa,Chandler,Glendale,Gilbert,Peoria,Surprise', state:'AZ', country:'US', zone:9},
+  {en:'Tucson',            zh:'图森',        alias:'', state:'AZ', country:'US', zone:9},
+  {en:'Las Vegas',         zh:'拉斯维加斯',  alias:'Henderson,North Las Vegas,Summerlin', state:'NV', country:'US', zone:9},
+  {en:'Reno',              zh:'里诺',        alias:'', state:'NV', country:'US', zone:7},
+  // ── 美国 西海岸 / 加州 ──
+  {en:'Los Angeles',       zh:'洛杉矶',      alias:'LA,West LA,Santa Monica,Culver City,Burbank,Glendale,Pasadena,Monterey Park,Alhambra,San Gabriel,Arcadia,Rowland Heights,Hacienda Heights,El Monte,Temple City,Rosemead,Covina,West Covina,Diamond Bar,Walnut,Chino Hills,Pomona', state:'CA', country:'US', zone:9},
+  {en:'San Diego',         zh:'圣地亚哥',    alias:'Chula Vista,Santee,El Cajon,Escondido,Oceanside,Carlsbad,Mira Mesa,Carmel Valley SD', state:'CA', country:'US', zone:9},
+  {en:'San Francisco',     zh:'旧金山',      alias:'SF,湾区,Bay Area,Daly City,San Mateo,Burlingame,South San Francisco', state:'CA', country:'US', zone:9},
+  {en:'San Jose',          zh:'圣何塞',      alias:'Santa Clara,Sunnyvale,Cupertino,Mountain View,Campbell,Milpitas,Fremont', state:'CA', country:'US', zone:9},
+  {en:'Oakland',           zh:'奥克兰',      alias:'Berkeley,Emeryville,Piedmont,Alameda', state:'CA', country:'US', zone:9},
+  {en:'Sacramento',        zh:'萨克拉门托',  alias:'Elk Grove,Roseville,Folsom,Rancho Cordova', state:'CA', country:'US', zone:9},
+  {en:'San Bernardino',    zh:'圣贝纳迪诺',  alias:'Riverside,Moreno Valley,Fontana,Ontario,Rancho Cucamonga', state:'CA', country:'US', zone:9},
+  {en:'Irvine',            zh:'尔湾',        alias:'Newport Beach,Costa Mesa,Tustin,Lake Forest,Laguna Hills,Mission Viejo,Anaheim,Garden Grove,Westminster,Cerritos,Torrance,Carson,Gardena', state:'CA', country:'US', zone:9},
+  {en:'Fresno',            zh:'弗雷斯诺',    alias:'Visalia,Bakersfield', state:'CA', country:'US', zone:9},
+  {en:'Santa Barbara',     zh:'圣巴巴拉',    alias:'Ventura,Oxnard,Thousand Oaks,Simi Valley', state:'CA', country:'US', zone:9},
+  // ── 美国 西北部 ──
+  {en:'Seattle',           zh:'西雅图',      alias:'Bellevue,Redmond,Kirkland,Renton,Issaquah,Bothell,Shoreline,Burien,Kent,Federal Way', state:'WA', country:'US', zone:8},
+  {en:'Portland',          zh:'波特兰',      alias:'Beaverton,Hillsboro,Gresham,Tigard,Lake Oswego', state:'OR', country:'US', zone:8},
+  {en:'Spokane',           zh:'斯波坎',      alias:'', state:'WA', country:'US', zone:6},
+  {en:'Tacoma',            zh:'塔科马',      alias:'', state:'WA', country:'US', zone:8},
+  {en:'Eugene',            zh:'尤金',        alias:'', state:'OR', country:'US', zone:8},
+  {en:'Boise',             zh:'博伊西',      alias:'Nampa,Meridian', state:'ID', country:'US', zone:6},
+  // ── 美国 其他 ──
+  {en:'Honolulu',          zh:'火奴鲁鲁',    alias:'夏威夷,Hawaii,Oahu,Maui', state:'HI', country:'US', zone:9},
+  {en:'Anchorage',         zh:'安克雷奇',    alias:'阿拉斯加,Alaska', state:'AK', country:'US', zone:5},
+  // ── 加拿大 ──
+  {en:'Toronto',           zh:'多伦多',      alias:'Mississauga,Brampton,Markham,Richmond Hill,Vaughan,North York,Scarborough,Pickering,Ajax,Oshawa,Oakville,Burlington', state:'ON', country:'CA', zone:6},
+  {en:'Vancouver',         zh:'温哥华',      alias:'Burnaby,Surrey,Richmond BC,Coquitlam,Langley,Abbotsford,Delta,New Westminster,North Vancouver,West Vancouver,Maple Ridge', state:'BC', country:'CA', zone:8},
+  {en:'Montreal',          zh:'蒙特利尔',    alias:'Laval,Longueuil,Brossard,Saint-Lambert,Boucherville', state:'QC', country:'CA', zone:5},
+  {en:'Calgary',           zh:'卡尔加里',    alias:'Airdrie,Cochrane', state:'AB', country:'CA', zone:4},
+  {en:'Edmonton',          zh:'埃德蒙顿',    alias:'St. Albert,Sherwood Park,Spruce Grove', state:'AB', country:'CA', zone:4},
+  {en:'Ottawa',            zh:'渥太华',      alias:'Gatineau,Kanata,Orleans', state:'ON', country:'CA', zone:5},
+  {en:'Winnipeg',          zh:'温尼伯',      alias:'', state:'MB', country:'CA', zone:4},
+  {en:'Quebec City',       zh:'魁北克城',    alias:'Quebec,魁北克', state:'QC', country:'CA', zone:5},
+  {en:'Hamilton',          zh:'汉密尔顿',    alias:'', state:'ON', country:'CA', zone:6},
+  {en:'Kitchener',         zh:'基奇纳',      alias:'Waterloo,Cambridge ON,滑铁卢', state:'ON', country:'CA', zone:6},
+  {en:'London',            zh:'伦敦',        alias:'London ON', state:'ON', country:'CA', zone:6},
+  {en:'Windsor',           zh:'温莎',        alias:'', state:'ON', country:'CA', zone:7},
+  {en:'Victoria',          zh:'维多利亚',    alias:'Saanich,Oak Bay,Langford,Esquimalt', state:'BC', country:'CA', zone:8},
+  {en:'Kelowna',           zh:'基洛纳',      alias:'', state:'BC', country:'CA', zone:6},
+  {en:'Saskatoon',         zh:'萨斯卡通',    alias:'', state:'SK', country:'CA', zone:3},
+  {en:'Regina',            zh:'里贾纳',      alias:'', state:'SK', country:'CA', zone:3},
+  {en:'Halifax',           zh:'哈利法克斯',  alias:'', state:'NS', country:'CA', zone:6},
+];
+
+const zoneDesc = {
+  3: {emoji:'❄️', label:'Zone 3', sub:'极寒带 · 极短生长季', color:'bg-blue-600', examples:'Saskatoon, Regina', note:'生长季仅6月–8月，建议优先选耐寒速生品种'},
+  4: {emoji:'🌨️', label:'Zone 4', sub:'寒带 · 短生长季', color:'bg-blue-500', examples:'Calgary, Edmonton, Winnipeg', note:'生长季约5月中–9月初，建议室内育苗延长生长期'},
+  5: {emoji:'🌤️', label:'Zone 5', sub:'温带北部', color:'bg-cyan-600', examples:'Chicago, Minneapolis, Montreal', note:'生长季4月–10月，春季室内育苗十分重要'},
+  6: {emoji:'⛅', label:'Zone 6', sub:'温带中部', color:'bg-teal-600', examples:'Toronto, Detroit, Denver, Boston', note:'生长季3月中–11月初，大多数蔬菜均可种植'},
+  7: {emoji:'🌥️', label:'Zone 7', sub:'暖温带', color:'bg-green-600', examples:'NYC, DC, Seattle, Nashville', note:'生长季3月初–11月，条件优越，多数蔬菜表现极佳'},
+  8: {emoji:'🌞', label:'Zone 8', sub:'温暖带', color:'bg-yellow-500', examples:'Vancouver, Atlanta, Dallas, Portland', note:'生长季2月–12月，春秋两季均可种植，夏季注意遮荫'},
+  9: {emoji:'☀️', label:'Zone 9', sub:'亚热带边缘', color:'bg-orange-500', examples:'Houston, LA, SF Bay Area, Miami', note:'几乎全年可种植，夏季高温需注意耐热品种选择'},
+};
+
+function searchCities(query) {
+  if (!query || query.trim().length < 1) return [];
+  const q = query.trim().toLowerCase();
+  const results = [];
+  for (const city of cityZoneDB) {
+    const searchStr = [city.en, city.zh, city.alias, city.state].join(' ').toLowerCase();
+    if (searchStr.includes(q)) {
+      results.push(city);
+      if (results.length >= 8) break;
+    }
+  }
+  return results;
+}
+
+function onCityInput(val) {
+  const suggestions = document.getElementById('citySuggestions');
+  const result = document.getElementById('zoneResult');
+  if (!val || val.trim().length < 1) {
+    suggestions.classList.add('hidden');
+    result.classList.add('hidden');
+    return;
+  }
+  const matches = searchCities(val);
+  if (matches.length === 0) {
+    suggestions.innerHTML = '<div class="px-4 py-3 text-sm text-gray-400">未找到该城市，请尝试英文名称</div>';
+    suggestions.classList.remove('hidden');
+    return;
+  }
+  suggestions.innerHTML = matches.map(city => `
+    <div class="px-4 py-3 hover:bg-green-50 cursor-pointer flex items-center justify-between border-b border-gray-50 last:border-0"
+         onclick="selectCity(${JSON.stringify(city).replace(/"/g,'&quot;')})">
+      <div>
+        <span class="font-medium text-gray-800">${city.zh}</span>
+        <span class="text-gray-400 text-sm ml-2">${city.en}</span>
+        <span class="text-gray-300 text-xs ml-1">${city.state}, ${city.country}</span>
+      </div>
+      <span class="text-xs font-bold px-2 py-0.5 rounded-full text-white ${zoneDesc[city.zone]?.color || 'bg-gray-400'}">Zone ${city.zone}</span>
+    </div>`).join('');
+  suggestions.classList.remove('hidden');
+}
+
+function selectCity(city) {
+  document.getElementById('cityInput').value = city.zh + ' / ' + city.en;
+  document.getElementById('citySuggestions').classList.add('hidden');
+  showZoneResult(city);
+}
+
+function showZoneResult(city) {
+  const z = city.zone;
+  const effectiveZone = Math.min(Math.max(z, 5), 9); // clamp to 5-9 for our data
+  const desc = zoneDesc[z] || zoneDesc[9];
+  const result = document.getElementById('zoneResult');
+
+  const outOfRange = z < 5;
+  const warmNote = z > 9 ? '（Zone 10，我们以 Zone 9 数据展示）' : '';
+
+  result.innerHTML = `
+    <div class="rounded-2xl border-2 border-green-100 overflow-hidden">
+      <div class="p-5 ${desc.color} text-white flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="text-4xl">${desc.emoji}</span>
+          <div>
+            <div class="font-bold text-xl">${desc.label} · ${desc.sub}</div>
+            <div class="text-white text-opacity-90 text-sm mt-0.5">${city.zh} / ${city.en}，${city.state}</div>
+          </div>
+        </div>
+        <div class="text-4xl font-black opacity-30">${z}</div>
+      </div>
+      <div class="bg-white p-4">
+        <p class="text-sm text-gray-600">💡 ${desc.note}</p>
+        ${outOfRange ? `<div class="mt-3 bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800">⚠️ Zone ${z} 生长季较短，以下展示 Zone 5 数据作为参考。建议使用温室或室内种植延长生长期。</div>` : ''}
+        ${warmNote ? `<div class="mt-3 bg-orange-50 border border-orange-200 rounded-xl p-3 text-xs text-orange-700">🌡️ 你所在地为 ${warmNote}，以下展示最接近的 Zone 9 数据。</div>` : ''}
+        <button onclick="applyZone(${effectiveZone})" class="mt-4 w-full bg-green-700 hover:bg-green-600 text-white rounded-xl py-2.5 text-sm font-semibold transition">
+          ✅ 使用 Zone ${effectiveZone} 查看我的种植日历 →
+        </button>
+      </div>
+    </div>`;
+  result.classList.remove('hidden');
+}
+
+function applyZone(z) {
+  setGalleryZone(z);
+  setCalZone(z);
+  document.getElementById('gallery').scrollIntoView({behavior:'smooth'});
+  // Flash feedback
+  const btn = document.querySelector(`#gz${z}`);
+  if (btn) { btn.classList.add('ring-4','ring-yellow-300'); setTimeout(()=>btn.classList.remove('ring-4','ring-yellow-300'), 2000); }
+}
+
+// Smooth scroll helper (avoids href links triggering external-link warnings)
+function scrollTo(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({behavior:'smooth'});
+}
+
+// Close suggestions when clicking outside
+document.addEventListener('click', e => {
+  if (!document.getElementById('cityInput').contains(e.target)) {
+    document.getElementById('citySuggestions').classList.add('hidden');
+  }
+});
+
+// =============================================
+// DATA
+// =============================================
+const veggies = [
+  { name:'小白菜', en:'Bok Choy', type:'叶菜', temp:'15-25°C', days:'35-50天', water:'每2天', notes:'速生耐寒，注意防蚜虫，可多次分批采收',
+    zones:{5:{sow:'3月室内',trans:'5月初移',harvest:'6-7月'},6:{sow:'2月室内',trans:'4月中移',harvest:'5-6月'},7:{sow:'2月室内',trans:'3月下移',harvest:'4-5月'},8:{sow:'2-3月直播',trans:'—',harvest:'4-5月'},9:{sow:'1-2月直播',trans:'—',harvest:'3-4月'}},
+    seeds:{amz:'https://www.amazon.com/s?k=bok+choy+seeds',kit:'https://www.kitazawaseed.com/search.html?q=bok+choy',evg:'https://www.evergreenseeds.com/search?q=bok+choy'}},
+  { name:'上海青', en:'Shanghai Bok Choy', type:'叶菜', temp:'15-25°C', days:'30-45天', water:'每2天', notes:'与小白菜相似，叶柄更嫩，炒食口感更佳',
+    zones:{5:{sow:'3月室内',trans:'5月初',harvest:'6-7月'},6:{sow:'2月室内',trans:'4月初',harvest:'5-6月'},7:{sow:'2月室内',trans:'3月下',harvest:'4-5月'},8:{sow:'2-3月直播',trans:'—',harvest:'4-5月'},9:{sow:'1月直播',trans:'—',harvest:'3-4月'}},
+    seeds:{amz:'https://www.amazon.com/s?k=shanghai+bok+choy+seeds',kit:'https://www.kitazawaseed.com/search.html?q=shanghai+bok+choy',evg:'https://www.evergreenseeds.com/search?q=shanghai+bok+choy'}},
+  { name:'生菜', en:'Lettuce', type:'叶菜', temp:'15-20°C', days:'45-60天', water:'每2天', notes:'高温超25°C易抽薹，凉季效果最佳',
+    zones:{5:{sow:'3月室内',trans:'5月初',harvest:'6-7月'},6:{sow:'2月室内',trans:'4月初',harvest:'5-6月'},7:{sow:'2月直播',trans:'—',harvest:'4-5月'},8:{sow:'1月直播',trans:'—',harvest:'3-4月'},9:{sow:'1月直播',trans:'—',harvest:'2-3月'}},
+    seeds:{amz:'https://www.amazon.com/s?k=chinese+lettuce+seeds',kit:'https://www.kitazawaseed.com/search.html?q=lettuce',evg:'https://www.evergreenseeds.com/search?q=lettuce'}},
+  { name:'菠菜', en:'Spinach', type:'叶菜', temp:'10-20°C', days:'40-55天', water:'每2天', notes:'极耐寒，可早春直播，温带地区春秋两季均可种',
+    zones:{5:{sow:'4月直播',trans:'—',harvest:'6月'},6:{sow:'3月直播',trans:'—',harvest:'5月'},7:{sow:'2月直播',trans:'—',harvest:'4月'},8:{sow:'1-2月直播',trans:'—',harvest:'3-4月'},9:{sow:'1月直播',trans:'—',harvest:'2-3月'}},
+    seeds:{amz:'https://www.amazon.com/s?k=spinach+seeds',kit:'https://www.kitazawaseed.com/search.html?q=spinach',evg:'https://www.evergreenseeds.com/search?q=spinach'}},
+  { name:'茼蒿', en:'Chrysanthemum Greens', type:'叶菜', temp:'15-20°C', days:'35-50天', water:'每2天', notes:'耐寒，可多次割叶，割后3天内追肥促发',
+    zones:{5:{sow:'4月直播',trans:'—',harvest:'6月'},6:{sow:'3月直播',trans:'—',harvest:'5月'},7:{sow:'3月直播',trans:'—',harvest:'4-5月'},8:{sow:'2-3月直播',trans:'—',harvest:'4月'},9:{sow:'2月直播',trans:'—',harvest:'3-4月'}},
+    seeds:{amz:'https://www.amazon.com/s?k=shungiku+chrysanthemum+greens+seeds',kit:'https://www.kitazawaseed.com/search.html?q=shungiku',evg:'https://www.evergreenseeds.com/search?q=chrysanthemum+greens'}},
+  { name:'苋菜', en:'Amaranth', type:'叶菜', temp:'20-30°C', days:'30-45天', water:'每2天', notes:'喜热不耐寒，气温稳定后再播，产量高',
+    zones:{5:{sow:'5月直播',trans:'—',harvest:'7月'},6:{sow:'5月直播',trans:'—',harvest:'6-7月'},7:{sow:'4月直播',trans:'—',harvest:'6月'},8:{sow:'3-4月直播',trans:'—',harvest:'5-6月'},9:{sow:'3月直播',trans:'—',harvest:'5月'}},
+    seeds:{amz:'https://www.amazon.com/s?k=amaranth+vegetable+seeds',kit:'https://www.kitazawaseed.com/search.html?q=amaranth',evg:'https://www.evergreenseeds.com/search?q=amaranth'}},
+  { name:'空心菜', en:'Water Spinach', type:'叶菜', temp:'25-35°C', days:'30-45天', water:'每天', notes:'喜高温高湿，华南风味，可水培或土培',
+    zones:{5:{sow:'5月室内',trans:'6月',harvest:'7-8月'},6:{sow:'5月直播',trans:'—',harvest:'7-8月'},7:{sow:'4月直播',trans:'—',harvest:'6-8月'},8:{sow:'3-4月直播',trans:'—',harvest:'5-8月'},9:{sow:'3月直播',trans:'—',harvest:'5-8月'}},
+    seeds:{amz:'https://www.amazon.com/s?k=water+spinach+seeds+ong+choy',kit:'https://www.kitazawaseed.com/search.html?q=water+spinach',evg:'https://www.evergreenseeds.com/search?q=water+spinach'}},
+  { name:'番茄', en:'Tomato', type:'瓜果', temp:'20-28°C', days:'70-90天', water:'每2天', notes:'喜阳充足，需搭架，丰产之王，建议早育苗',
+    zones:{5:{sow:'3月室内',trans:'5月底',harvest:'7-9月'},6:{sow:'2月室内',trans:'5月中',harvest:'7-9月'},7:{sow:'2月室内',trans:'4月底',harvest:'6-9月'},8:{sow:'1月室内',trans:'3月',harvest:'5-8月'},9:{sow:'1月室内',trans:'2-3月',harvest:'5-8月'}},
+    seeds:{amz:'https://www.amazon.com/s?k=asian+tomato+seeds',kit:'https://www.kitazawaseed.com/search.html?q=tomato',evg:'https://www.evergreenseeds.com/search?q=tomato'}},
+  { name:'黄瓜', en:'Cucumber', type:'瓜果', temp:'22-28°C', days:'50-65天', water:'每天', notes:'需搭架，喜温不耐霜，保持土壤湿润',
+    zones:{5:{sow:'4月室内',trans:'5月底',harvest:'7-8月'},6:{sow:'4月室内',trans:'5月中',harvest:'6-8月'},7:{sow:'3月室内',trans:'4月底',harvest:'6-8月'},8:{sow:'2月室内',trans:'3月',harvest:'5-7月'},9:{sow:'2月直播',trans:'—',harvest:'4-6月'}},
+    seeds:{amz:'https://www.amazon.com/s?k=asian+cucumber+seeds',kit:'https://www.kitazawaseed.com/search.html?q=cucumber',evg:'https://www.evergreenseeds.com/search?q=cucumber'}},
+  { name:'苦瓜', en:'Bitter Melon', type:'瓜果', temp:'25-30°C', days:'80-100天', water:'每天', notes:'需长生长季，Zone 5须在3月就开始室内育苗',
+    zones:{5:{sow:'3月室内',trans:'5月底',harvest:'8-9月'},6:{sow:'3月室内',trans:'5月中',harvest:'8-9月'},7:{sow:'2月室内',trans:'4月底',harvest:'7-9月'},8:{sow:'1月室内',trans:'3月',harvest:'6-8月'},9:{sow:'1月室内',trans:'2-3月',harvest:'5-8月'}},
+    seeds:{amz:'https://www.amazon.com/s?k=bitter+melon+seeds',kit:'https://www.kitazawaseed.com/search.html?q=bitter+melon',evg:'https://www.evergreenseeds.com/search?q=bitter+melon'}},
+  { name:'丝瓜', en:'Luffa', type:'瓜果', temp:'25-35°C', days:'70-90天', water:'每天', notes:'需长季节，成熟可做天然丝瓜络，需搭架',
+    zones:{5:{sow:'3月室内',trans:'5月底',harvest:'8-9月'},6:{sow:'3月室内',trans:'5月中',harvest:'8-9月'},7:{sow:'2月室内',trans:'4月底',harvest:'7-9月'},8:{sow:'2月室内',trans:'3月',harvest:'6-8月'},9:{sow:'1月室内',trans:'2-3月',harvest:'5-8月'}},
+    seeds:{amz:'https://www.amazon.com/s?k=luffa+seeds',kit:'https://www.kitazawaseed.com/search.html?q=luffa',evg:'https://www.evergreenseeds.com/search?q=luffa'}},
+  { name:'冬瓜', en:'Winter Melon', type:'瓜果', temp:'25-30°C', days:'90-120天', water:'每2天', notes:'大型蔬菜，需要充足生长空间，耐储存',
+    zones:{5:{sow:'3月室内',trans:'5月底',harvest:'9月'},6:{sow:'3月室内',trans:'5月初',harvest:'8-9月'},7:{sow:'2月室内',trans:'4月底',harvest:'8月'},8:{sow:'2月室内',trans:'3月',harvest:'7月'},9:{sow:'1月室内',trans:'2月',harvest:'6月'}},
+    seeds:{amz:'https://www.amazon.com/s?k=winter+melon+seeds',kit:'https://www.kitazawaseed.com/search.html?q=winter+melon',evg:'https://www.evergreenseeds.com/search?q=winter+melon'}},
+  { name:'茄子', en:'Eggplant', type:'瓜果', temp:'22-28°C', days:'75-90天', water:'每2天', notes:'比番茄更耐热，需长育苗期，修枝促丰产',
+    zones:{5:{sow:'3月室内',trans:'5月底',harvest:'8-9月'},6:{sow:'2月室内',trans:'5月中',harvest:'7-9月'},7:{sow:'2月室内',trans:'4月底',harvest:'7-9月'},8:{sow:'1月室内',trans:'3月',harvest:'5-8月'},9:{sow:'1月室内',trans:'2-3月',harvest:'5-8月'}},
+    seeds:{amz:'https://www.amazon.com/s?k=asian+eggplant+seeds',kit:'https://www.kitazawaseed.com/search.html?q=eggplant',evg:'https://www.evergreenseeds.com/search?q=eggplant'}},
+  { name:'辣椒', en:'Chili Pepper', type:'瓜果', temp:'20-28°C', days:'80-100天', water:'每2天', notes:'育苗期最长，建议比番茄早2-3周播种',
+    zones:{5:{sow:'2月室内',trans:'5月底',harvest:'8-9月'},6:{sow:'2月室内',trans:'5月中',harvest:'7-9月'},7:{sow:'1月室内',trans:'4月底',harvest:'7-9月'},8:{sow:'1月室内',trans:'3月',harvest:'5-8月'},9:{sow:'12月室内',trans:'2月',harvest:'5-8月'}},
+    seeds:{amz:'https://www.amazon.com/s?k=chinese+chili+pepper+seeds',kit:'https://www.kitazawaseed.com/search.html?q=pepper',evg:'https://www.evergreenseeds.com/search?q=pepper'}},
+  { name:'豆角', en:'Long Bean', type:'豆类', temp:'20-30°C', days:'60-75天', water:'每2天', notes:'直播为主，忌移根，豆科植物自身固氮',
+    zones:{5:{sow:'5月直播',trans:'—',harvest:'7-8月'},6:{sow:'5月直播',trans:'—',harvest:'7-8月'},7:{sow:'4月直播',trans:'—',harvest:'6-8月'},8:{sow:'3-4月直播',trans:'—',harvest:'5-7月'},9:{sow:'3月直播',trans:'—',harvest:'5-7月'}},
+    seeds:{amz:'https://www.amazon.com/s?k=yard+long+bean+seeds',kit:'https://www.kitazawaseed.com/search.html?q=long+bean',evg:'https://www.evergreenseeds.com/search?q=long+bean'}},
+  { name:'豌豆', en:'Snow Pea', type:'豆类', temp:'10-18°C', days:'55-70天', water:'每2天', notes:'耐寒，早春直播效果好，不耐热，夏来前收完',
+    zones:{5:{sow:'4月直播',trans:'—',harvest:'6月'},6:{sow:'3月直播',trans:'—',harvest:'5-6月'},7:{sow:'2-3月直播',trans:'—',harvest:'4-5月'},8:{sow:'1-2月直播',trans:'—',harvest:'3-4月'},9:{sow:'1月直播',trans:'—',harvest:'3月'}},
+    seeds:{amz:'https://www.amazon.com/s?k=snow+pea+seeds',kit:'https://www.kitazawaseed.com/search.html?q=snow+pea',evg:'https://www.evergreenseeds.com/search?q=snow+pea'}},
+  { name:'毛豆', en:'Edamame', type:'豆类', temp:'20-28°C', days:'75-90天', water:'每2天', notes:'直播不耐移栽，分批播种延长采收期',
+    zones:{5:{sow:'5月直播',trans:'—',harvest:'8月'},6:{sow:'5月直播',trans:'—',harvest:'7-8月'},7:{sow:'4月直播',trans:'—',harvest:'7月'},8:{sow:'3-4月直播',trans:'—',harvest:'6月'},9:{sow:'3月直播',trans:'—',harvest:'5-6月'}},
+    seeds:{amz:'https://www.amazon.com/s?k=edamame+seeds',kit:'https://www.kitazawaseed.com/search.html?q=edamame',evg:'https://www.evergreenseeds.com/search?q=edamame'}},
+  { name:'韭菜', en:'Chinese Chive', type:'葱蒜', temp:'15-25°C', days:'90天+', water:'每3天', notes:'多年生，割后可复发，割后3天内追高氮肥',
+    zones:{5:{sow:'3月室内',trans:'5月',harvest:'7月起'},6:{sow:'2月室内',trans:'4月',harvest:'6月起'},7:{sow:'2月室内',trans:'3-4月',harvest:'5月起'},8:{sow:'1月室内',trans:'3月',harvest:'4月起'},9:{sow:'1月室内',trans:'2-3月',harvest:'4月起'}},
+    seeds:{amz:'https://www.amazon.com/s?k=chinese+chive+seeds',kit:'https://www.kitazawaseed.com/search.html?q=chive',evg:'https://www.evergreenseeds.com/search?q=chives'}},
+  { name:'大葱', en:'Green Onion', type:'葱蒜', temp:'10-25°C', days:'90-120天', water:'每3天', notes:'耐寒耐热，全年可种，葱白发育期减氮增钾',
+    zones:{5:{sow:'3月室内',trans:'5月',harvest:'8-9月'},6:{sow:'2月室内',trans:'4月',harvest:'7-8月'},7:{sow:'2月室内',trans:'3-4月',harvest:'6-7月'},8:{sow:'1月室内',trans:'3月',harvest:'5-6月'},9:{sow:'1月室内',trans:'2-3月',harvest:'4-5月'}},
+    seeds:{amz:'https://www.amazon.com/s?k=chinese+green+onion+seeds',kit:'https://www.kitazawaseed.com/search.html?q=green+onion',evg:'https://www.evergreenseeds.com/search?q=green+onion'}},
+  { name:'香菜', en:'Cilantro', type:'香草', temp:'15-20°C', days:'45-60天', water:'每2天', notes:'不耐热，需凉季种植，温度高时容易抽薹',
+    zones:{5:{sow:'4月直播',trans:'—',harvest:'6月'},6:{sow:'3月直播',trans:'—',harvest:'5月'},7:{sow:'3月直播',trans:'—',harvest:'4-5月'},8:{sow:'2-3月直播',trans:'—',harvest:'4月'},9:{sow:'2月直播',trans:'—',harvest:'3-4月'}},
+    seeds:{amz:'https://www.amazon.com/s?k=cilantro+seeds',kit:'https://www.kitazawaseed.com/search.html?q=cilantro',evg:'https://www.evergreenseeds.com/search?q=cilantro'}},
+  { name:'芹菜', en:'Chinese Celery', type:'叶菜', temp:'15-20°C', days:'90-110天', water:'每2天', notes:'耐阴，香气浓郁，适合煮汤和炒菜',
+    zones:{5:{sow:'3月室内',trans:'5月',harvest:'7-8月'},6:{sow:'2月室内',trans:'4月',harvest:'6-7月'},7:{sow:'2月室内',trans:'3-4月',harvest:'5-6月'},8:{sow:'1月室内',trans:'3月',harvest:'4-5月'},9:{sow:'1月室内',trans:'2月',harvest:'3-4月'}},
+    seeds:{amz:'https://www.amazon.com/s?k=chinese+celery+seeds',kit:'https://www.kitazawaseed.com/search.html?q=celery',evg:'https://www.evergreenseeds.com/search?q=celery'}}
+];
+
+const fertData = [
+  { group:'小白菜 · 上海青', emoji:'🥬', stages:[
+    {stage:'育苗期',duration:'0–2周',fert:'稀薄有机液肥',npk:'5-1-1',method:'播种后7天起，每周1次，稀释10倍'},
+    {stage:'营养生长',duration:'2–5周',fert:'高氮速溶肥',npk:'20-10-10',method:'每7-10天浇施1次'},
+    {stage:'采收维护',duration:'5周+',fert:'少量氮肥维持',npk:'10-5-5',method:'每2周1次即可'}]},
+  { group:'生菜 · 菠菜', emoji:'🥬', stages:[
+    {stage:'育苗期',duration:'0–2周',fert:'极稀薄液肥或不施',npk:'—',method:'有底肥即可，基本不需追肥'},
+    {stage:'营养生长',duration:'2–6周',fert:'高氮液肥',npk:'20-10-10',method:'每10天浇施1次'},
+    {stage:'采收前',duration:'采收前1周',fert:'停肥',npk:'—',method:'停肥以保证口感'}]},
+  { group:'茼蒿', emoji:'🌿', stages:[
+    {stage:'育苗期',duration:'0–2周',fert:'不施肥',npk:'—',method:'确保底肥充足即可'},
+    {stage:'营养生长',duration:'2–5周',fert:'氮为主液肥',npk:'20-10-10',method:'每7-10天1次'},
+    {stage:'割后追肥',duration:'每次割后3天内',fert:'高氮速溶肥',npk:'15-5-5',method:'割后3天内立刻追施促发'}]},
+  { group:'苋菜 · 空心菜', emoji:'🥬', stages:[
+    {stage:'苋菜全程',duration:'全程',fert:'高氮液肥',npk:'20-10-10',method:'每7天1次，喜肥，不要停'},
+    {stage:'空心菜全程',duration:'全程',fert:'均衡+高氮',npk:'15-10-10',method:'每7天1次，保持水分'}]},
+  { group:'番茄', emoji:'🍅', stages:[
+    {stage:'育苗期',duration:'0–6周',fert:'低氮启动肥',npk:'4-12-4',method:'2叶期起每2周1次，稀释'},
+    {stage:'定植缓苗',duration:'定植后1-2周',fert:'不施或极少',npk:'—',method:'缓苗期不施，等新叶萌出'},
+    {stage:'营养生长',duration:'定植后2-5周',fert:'均衡复合肥',npk:'10-10-10',method:'每7-10天1次'},
+    {stage:'开花坐果',duration:'开花期',fert:'低氮高磷钾',npk:'5-10-15',method:'每7天1次'},
+    {stage:'结果盛期',duration:'挂果期',fert:'高钾专用番茄肥',npk:'8-32-16',method:'每5-7天1次'},
+    {stage:'持续采收',duration:'采收期',fert:'低量钾肥维持',npk:'5-5-10',method:'每2周1次'}]},
+  { group:'黄瓜', emoji:'🥒', stages:[
+    {stage:'育苗期',duration:'0–3周',fert:'稀薄均衡液肥',npk:'10-10-10',method:'每2周1次'},
+    {stage:'定植缓苗',duration:'定植后1周',fert:'不施',npk:'—',method:'缓苗期不施'},
+    {stage:'营养生长',duration:'定植后2-4周',fert:'均衡复合肥',npk:'15-15-15',method:'每10天1次'},
+    {stage:'开花坐果',duration:'开花期',fert:'低氮高钾',npk:'5-10-15',method:'每7天1次'},
+    {stage:'结果盛期',duration:'挂果期',fert:'高钾复合肥',npk:'8-16-24',method:'每5-7天1次'}]},
+  { group:'苦瓜 · 丝瓜', emoji:'🍈', stages:[
+    {stage:'育苗期',duration:'0–4周',fert:'稀薄均衡',npk:'10-10-10',method:'每2周1次'},
+    {stage:'营养生长',duration:'定植后2-5周',fert:'均衡复合肥',npk:'15-10-10',method:'每10天1次'},
+    {stage:'开花结果',duration:'开花起',fert:'高磷高钾',npk:'5-15-20',method:'每7天1次'}]},
+  { group:'冬瓜', emoji:'🟢', stages:[
+    {stage:'营养生长',duration:'全程前期',fert:'均衡复合肥',npk:'15-15-15',method:'每10天1次'},
+    {stage:'结果盛期',duration:'挂果期',fert:'高钾肥',npk:'5-10-20',method:'每7天1次'}]},
+  { group:'茄子', emoji:'🍆', stages:[
+    {stage:'育苗期',duration:'0–6周',fert:'低氮启动肥',npk:'4-12-4',method:'每2周稀薄施'},
+    {stage:'营养生长',duration:'定植后2-5周',fert:'均衡复合肥',npk:'10-10-10',method:'每10天1次'},
+    {stage:'开花结果',duration:'开花起',fert:'中氮高磷钾',npk:'8-16-16',method:'每7天1次'}]},
+  { group:'辣椒', emoji:'🌶️', stages:[
+    {stage:'育苗期',duration:'0–6周',fert:'低氮启动肥',npk:'4-12-4',method:'每2周1次'},
+    {stage:'营养生长',duration:'定植后2-5周',fert:'均衡复合肥',npk:'10-10-10',method:'每10天1次'},
+    {stage:'开花坐果',duration:'开花期',fert:'低氮高磷',npk:'5-20-10',method:'每7天1次'},
+    {stage:'结果盛期',duration:'挂果期',fert:'高钾复合肥',npk:'8-12-24',method:'每7天1次'}]},
+  { group:'豆角 · 豌豆 · 毛豆', emoji:'🫘', stages:[
+    {stage:'育苗期',duration:'0–2周',fert:'不施或极少',npk:'—',method:'豆科固氮，施氮适得其反'},
+    {stage:'营养生长',duration:'2–4周',fert:'低氮磷为主',npk:'5-10-5',method:'移栽后2周施1次底肥'},
+    {stage:'开花结荚',duration:'开花期',fert:'高磷高钾',npk:'5-15-15',method:'每7-10天1次'}]},
+  { group:'韭菜', emoji:'🌿', stages:[
+    {stage:'育苗期',duration:'0–4周',fert:'稀薄均衡液肥',npk:'10-10-10',method:'每2周1次'},
+    {stage:'营养生长',duration:'定植后',fert:'高氮为主',npk:'20-10-10',method:'每10天1次'},
+    {stage:'割后追肥',duration:'每次割后3天内',fert:'高氮速溶肥',npk:'20-5-5',method:'割后3天内施，量要足'}]},
+  { group:'大葱', emoji:'🧅', stages:[
+    {stage:'育苗期',duration:'0–4周',fert:'稀薄均衡',npk:'10-10-10',method:'每2周1次'},
+    {stage:'营养生长',duration:'定植后2-8周',fert:'高氮复合肥',npk:'20-10-10',method:'每10天1次'},
+    {stage:'葱白发育',duration:'采收前4周',fert:'低氮高钾',npk:'5-10-15',method:'每10天1次，促葱白增粗'}]},
+  { group:'香菜 · 芹菜', emoji:'🌿', stages:[
+    {stage:'香菜全程',duration:'全程',fert:'少量均衡',npk:'10-10-10',method:'每3周1次即可，不可过肥'},
+    {stage:'芹菜育苗期',duration:'0–4周',fert:'稀薄均衡',npk:'10-10-10',method:'每2周1次'},
+    {stage:'芹菜营养生长',duration:'定植后2-6周',fert:'高氮均衡肥',npk:'20-10-10',method:'每7-10天1次'},
+    {stage:'芹菜茎秆发育',duration:'采收前4周',fert:'均衡+少量钾',npk:'15-10-15',method:'每10天1次'}]}
+];
+
+const seedShops = [
+  { name:'Kitazawa Seed', logo:'🏪', tag:'亚洲蔬菜专家', tagEn:'Asian Vegetable Specialist',
+    desc:'美国最专业的亚洲蔬菜种子店，中日韩品种最全，1917年创立，信誉极佳',
+    badge:'首选推荐', badgeColor:'bg-green-100 text-green-700',
+    url:'https://www.kitazawaseed.com',
+    items:['苦瓜','丝瓜','茼蒿','苋菜','空心菜','豆角','上海青']},
+  { name:'Evergreen Seeds', logo:'🌿', tag:'华人常用', tagEn:'Chinese-run Store',
+    desc:'华人经营，专注亚洲蔬菜，品种地道，许多在国内常见的菜这里都有',
+    badge:'华人推荐', badgeColor:'bg-blue-100 text-blue-700',
+    url:'https://www.evergreenseeds.com',
+    items:['冬瓜','韭菜','大葱','空心菜','芹菜','苋菜']},
+  { name:'Amazon', logo:'📦', tag:'快速配送', tagEn:'Prime Fast Delivery',
+    desc:'常见品种均有，适合买番茄、黄瓜等主流蔬菜种子和施肥工具',
+    badge:'Prime 速达', badgeColor:'bg-orange-100 text-orange-700',
+    url:'https://www.amazon.com/s?k=chinese+vegetable+seeds',
+    items:['番茄','黄瓜','菠菜','生菜','香菜','辣椒']}
+];
+
+// =============================================
+// STATE
+// =============================================
+let galleryZone = 5;
+let calZone = 5;
+let currentFilter = 'all';
+
+// =============================================
+// HELPERS
+// =============================================
+function typeEmoji(type) {
+  return {叶菜:'🥬',瓜果:'🍅',豆类:'🫘',葱蒜:'🧅',香草:'🌿'}[type] || '🌱';
+}
+function typeColor(type) {
+  return {
+    叶菜:'bg-green-100 text-green-700',
+    瓜果:'bg-red-100 text-red-700',
+    豆类:'bg-yellow-100 text-yellow-700',
+    葱蒜:'bg-purple-100 text-purple-700',
+    香草:'bg-teal-100 text-teal-700'
+  }[type] || 'bg-gray-100 text-gray-600';
+}
+
+// =============================================
+// GALLERY
+// =============================================
+function setGalleryZone(z) {
+  galleryZone = z;
+  [5,6,7,8,9].forEach(n => {
+    const btn = document.getElementById('gz'+n);
+    btn.className = n===z
+      ? 'gz-btn text-xs px-3 py-1 rounded-full bg-green-700 text-white font-medium'
+      : 'gz-btn text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-600';
+  });
+  renderVeggies();
+}
+
+function filterVeggies(btn, type) {
+  currentFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderVeggies();
+}
+
+function renderVeggies() {
+  const filtered = currentFilter==='all' ? veggies : veggies.filter(v=>v.type===currentFilter);
+  document.getElementById('veggieGrid').innerHTML = filtered.map(v => {
+    const zd = v.zones[galleryZone];
+    const imgSrc = `素材/蔬菜图片/${v.name}.jpg`;
+    return `
+      <div class="veggie-card bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer border border-gray-100" onclick="showModal('${v.name}')">
+        <div class="aspect-square overflow-hidden bg-gray-50">
+          <img src="${imgSrc}" alt="${v.name}" class="w-full h-full object-cover"
+               onerror="this.parentElement.innerHTML='<div class=\\'flex flex-col items-center justify-center h-full bg-green-50 gap-1\\'><span class=\\'text-3xl\\'>${typeEmoji(v.type)}</span><span class=\\'text-xs text-gray-400\\'>${v.name}</span></div>'">
+        </div>
+        <div class="p-3">
+          <div class="flex items-start justify-between gap-1 mb-1">
+            <div>
+              <div class="font-bold text-gray-800 text-sm leading-tight">${v.name}</div>
+              <div class="text-xs text-gray-400 mt-0.5">${v.en}</div>
+            </div>
+            <span class="text-xs px-1.5 py-0.5 rounded-full ${typeColor(v.type)} whitespace-nowrap mt-0.5">${v.type}</span>
+          </div>
+          <div class="mt-2 text-xs rounded-lg bg-green-50 p-2 space-y-0.5">
+            <div class="text-blue-600">🌱 播 ${zd ? zd.sow : '—'}</div>
+            <div class="text-orange-600">🌾 收 ${zd ? zd.harvest : '—'}</div>
+          </div>
+          ${v.seeds ? `
+          <div class="mt-2 flex gap-1">
+            <a href="${v.seeds.amz}" target="_blank" rel="noopener" title="Amazon"
+               class="flex-1 text-center text-xs bg-orange-50 border border-orange-200 text-orange-600 rounded-lg py-1 hover:bg-orange-100 transition" onclick="event.stopPropagation()">📦 Amazon</a>
+            <a href="${v.seeds.kit}" target="_blank" rel="noopener" title="Kitazawa Seed"
+               class="flex-1 text-center text-xs bg-green-50 border border-green-200 text-green-600 rounded-lg py-1 hover:bg-green-100 transition" onclick="event.stopPropagation()">🏪 Kitazawa</a>
+          </div>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// =============================================
+// MODAL
+// =============================================
+function showModal(name) {
+  const v = veggies.find(x=>x.name===name);
+  if (!v) return;
+  const imgSrc = `素材/蔬菜图片/${name}.jpg`;
+  document.getElementById('modalContent').innerHTML = `
+    <div class="relative">
+      <img src="${imgSrc}" alt="${name}" class="w-full h-52 object-cover rounded-t-2xl"
+           onerror="this.parentElement.innerHTML='<div class=\\'flex items-center justify-center h-52 bg-green-50 rounded-t-2xl text-5xl\\'>' + typeEmoji(v.type) + '</div>'">
+      <button onclick="closeModal()" class="absolute top-3 right-3 bg-white rounded-full w-8 h-8 shadow-md text-gray-500 hover:text-red-400 text-lg font-bold flex items-center justify-center">✕</button>
+    </div>
+    <div class="p-5">
+      <div class="flex items-center gap-2 mb-1">
+        <h2 class="text-2xl font-bold text-gray-800">${name}</h2>
+        <span class="${typeColor(v.type)} text-xs px-2 py-0.5 rounded-full">${v.type}</span>
+      </div>
+      <p class="text-gray-400 text-sm mb-4">${v.en}</p>
+      <div class="grid grid-cols-3 gap-2 mb-5">
+        <div class="bg-blue-50 rounded-xl p-2.5 text-center"><div class="text-xl mb-1">🌡️</div><div class="text-xs text-gray-400">适宜温度</div><div class="text-xs font-semibold text-gray-700 mt-0.5">${v.temp}</div></div>
+        <div class="bg-orange-50 rounded-xl p-2.5 text-center"><div class="text-xl mb-1">📅</div><div class="text-xs text-gray-400">生长周期</div><div class="text-xs font-semibold text-gray-700 mt-0.5">${v.days}</div></div>
+        <div class="bg-cyan-50 rounded-xl p-2.5 text-center"><div class="text-xl mb-1">💧</div><div class="text-xs text-gray-400">浇水</div><div class="text-xs font-semibold text-gray-700 mt-0.5">${v.water}</div></div>
+      </div>
+      <h3 class="font-semibold text-gray-700 mb-2 text-sm">各温度带播种时间</h3>
+      <div class="rounded-xl overflow-hidden border border-gray-100">
+        ${[5,6,7,8,9].map(z=>`
+          <div class="flex items-center px-3 py-2 text-xs ${z===galleryZone?'bg-green-50 font-semibold':'bg-white border-t border-gray-50'}">
+            <span class="w-20 text-gray-500">Zone ${z}${z===galleryZone?' ✓':''}</span>
+            <span class="text-blue-600 flex-1">🌱 ${v.zones[z].sow}</span>
+            <span class="text-orange-500 flex-1">🌾 ${v.zones[z].harvest}</span>
+          </div>`).join('')}
+      </div>
+      <div class="mt-4 bg-amber-50 border border-amber-100 rounded-xl p-3">
+        <p class="text-xs text-amber-800">💡 ${v.notes}</p>
+      </div>
+      ${v.seeds ? `
+      <div class="mt-4">
+        <p class="text-xs font-semibold text-gray-500 mb-2">🛒 购买种子 · Buy Seeds</p>
+        <div class="grid grid-cols-3 gap-2">
+          <a href="${v.seeds.amz}" target="_blank" rel="noopener"
+             class="flex flex-col items-center gap-1 bg-orange-50 border border-orange-200 rounded-xl py-2.5 px-1 hover:bg-orange-100 transition">
+            <span class="text-lg">📦</span>
+            <span class="text-xs font-medium text-orange-700">Amazon</span>
+            <span class="text-xs text-orange-400">Prime 速达</span>
+          </a>
+          <a href="${v.seeds.kit}" target="_blank" rel="noopener"
+             class="flex flex-col items-center gap-1 bg-green-50 border border-green-200 rounded-xl py-2.5 px-1 hover:bg-green-100 transition">
+            <span class="text-lg">🏪</span>
+            <span class="text-xs font-medium text-green-700">Kitazawa</span>
+            <span class="text-xs text-green-400">亚洲专家</span>
+          </a>
+          <a href="${v.seeds.evg}" target="_blank" rel="noopener"
+             class="flex flex-col items-center gap-1 bg-teal-50 border border-teal-200 rounded-xl py-2.5 px-1 hover:bg-teal-100 transition">
+            <span class="text-lg">🌿</span>
+            <span class="text-xs font-medium text-teal-700">Evergreen</span>
+            <span class="text-xs text-teal-400">华人推荐</span>
+          </a>
+        </div>
+      </div>` : ''}
+    </div>`;
+  document.getElementById('veggieModal').classList.add('show');
+}
+
+function closeModal(e) {
+  document.getElementById('veggieModal').classList.remove('show');
+}
+
+// =============================================
+// CALENDAR
+// =============================================
+const MONTHS = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月'];
+const NOW = 3; // March
+
+function monthInRange(str, m) {
+  if (!str || str==='—') return null;
+  const rangeM = str.match(/(\d+)-(\d+)月/);
+  if (rangeM) {
+    return m >= parseInt(rangeM[1]) && m <= parseInt(rangeM[2]);
+  }
+  return new RegExp(`${m}月`).test(str);
+}
+
+function cellType(v, m, z) {
+  const zd = v.zones[z];
+  if (!zd) return '';
+  if (monthInRange(zd.harvest, m)) return 'harvest';
+  if (zd.trans && zd.trans!=='—' && monthInRange(zd.trans, m)) return 'transplant';
+  if (monthInRange(zd.sow, m)) {
+    return zd.sow.includes('室内') ? 'indoor' : 'direct';
+  }
+  return '';
+}
+
+function setCalZone(z) {
+  calZone = z;
+  [5,6,7,8,9].forEach(n => {
+    const btn = document.getElementById('cz'+n);
+    btn.className = n===z
+      ? 'cz-btn text-sm px-4 py-2 rounded-lg font-medium bg-green-700 text-white'
+      : 'cz-btn text-sm px-4 py-2 rounded-lg font-medium bg-white text-gray-600 border';
+  });
+  renderCalendar();
+}
+
+function renderCalendar() {
+  // Header
+  document.getElementById('calHead').innerHTML = `<tr>
+    <th class="bg-green-800 text-white text-left px-4 py-3 text-sm font-medium sticky left-0">蔬菜</th>
+    ${MONTHS.map((mn,i)=>{
+      const isNow = (i+1)===NOW;
+      return `<th class="${isNow?'month-now-header bg-yellow-600':'bg-green-800'} text-white px-2 py-3 text-xs font-medium min-w-[40px]">${mn}${isNow?'<br><span class="text-yellow-200 text-xs">←</span>':''}</th>`;
+    }).join('')}
+  </tr>`;
+
+  // Body
+  document.getElementById('calendarBody').innerHTML = veggies.map((v,idx)=>{
+    const rowBg = idx%2===0?'bg-white':'bg-gray-50';
+    return `<tr class="${rowBg}">
+      <td class="px-4 py-2 sticky left-0 ${rowBg} border-r border-gray-100">
+        <div class="font-medium text-gray-800 text-sm whitespace-nowrap">${v.name}</div>
+        <div class="text-xs text-gray-400">${v.en}</div>
+      </td>
+      ${MONTHS.map((_,i)=>{
+        const m = i+1;
+        const ct = cellType(v, m, calZone);
+        const isNow = m===NOW;
+        let inner = '';
+        if (ct==='indoor') inner = `<div class="cell-indoor w-6 h-6 mx-auto rounded flex items-center justify-center text-xs text-blue-600 font-bold">室</div>`;
+        else if (ct==='direct') inner = `<div class="cell-direct w-6 h-6 mx-auto rounded"></div>`;
+        else if (ct==='transplant') inner = `<div class="cell-transplant w-6 h-6 mx-auto rounded flex items-center justify-center text-xs text-green-600 font-bold">植</div>`;
+        else if (ct==='harvest') inner = `<div class="cell-harvest w-6 h-6 mx-auto rounded flex items-center justify-center text-xs text-orange-600 font-bold">收</div>`;
+        return `<td class="px-1 py-2 text-center ${isNow?'bg-yellow-50':''}">${inner}</td>`;
+      }).join('')}
+    </tr>`;
+  }).join('');
+}
+
+// =============================================
+// FERTILIZER ACCORDION
+// =============================================
+function renderFertilizer() {
+  const stageColor = s => {
+    const map = {
+      '育苗期':'bg-sky-100 text-sky-700','定植缓苗':'bg-purple-100 text-purple-700',
+      '营养生长':'bg-green-100 text-green-700','开花坐果':'bg-pink-100 text-pink-700',
+      '开花结果':'bg-pink-100 text-pink-700','开花结荚':'bg-pink-100 text-pink-700',
+      '结果盛期':'bg-orange-100 text-orange-700','持续采收':'bg-amber-100 text-amber-700',
+      '采收前':'bg-amber-100 text-amber-700','割后追肥':'bg-yellow-100 text-yellow-700',
+      '葱白发育':'bg-teal-100 text-teal-700','全程':'bg-gray-100 text-gray-600',
+      '苋菜全程':'bg-gray-100 text-gray-600','空心菜全程':'bg-gray-100 text-gray-600',
+      '香菜全程':'bg-gray-100 text-gray-600','芹菜育苗期':'bg-sky-100 text-sky-700',
+      '芹菜营养生长':'bg-green-100 text-green-700','芹菜茎秆发育':'bg-teal-100 text-teal-700',
+      '毛豆全程':'bg-gray-100 text-gray-600'
+    };
+    for (const k of Object.keys(map)) { if (s.includes(k.replace('芹菜','').replace('苋菜','').replace('空心菜','').replace('香菜','').replace('毛豆',''))) return map[k]; }
+    return map[s] || 'bg-gray-100 text-gray-600';
+  };
+
+  document.getElementById('fertAccordion').innerHTML = fertData.map((g,i)=>`
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+      <button class="w-full px-5 py-4 flex items-center justify-between hover:bg-gray-50 transition" onclick="toggleAcc(${i})">
+        <div class="flex items-center gap-3">
+          <span class="text-xl">${g.emoji}</span>
+          <span class="font-semibold text-gray-800">${g.group}</span>
+          <span class="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">${g.stages.length} 阶段</span>
+        </div>
+        <span class="text-gray-400 text-sm accordion-arrow" id="arr${i}">▼</span>
+      </button>
+      <div class="accordion-content" id="acc${i}">
+        <div class="px-5 pb-5">
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="border-b-2 border-gray-100">
+                  <th class="text-left py-2 text-xs text-gray-400 font-medium pr-3">阶段</th>
+                  <th class="text-left py-2 text-xs text-gray-400 font-medium pr-3">时长</th>
+                  <th class="text-left py-2 text-xs text-gray-400 font-medium pr-3">推荐肥料</th>
+                  <th class="text-left py-2 text-xs text-gray-400 font-medium pr-3">NPK</th>
+                  <th class="text-left py-2 text-xs text-gray-400 font-medium hidden sm:table-cell">施用方式</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${g.stages.map(s=>`
+                  <tr class="border-b border-gray-50">
+                    <td class="py-2 pr-3"><span class="text-xs px-2 py-0.5 rounded-full ${stageColor(s.stage)} whitespace-nowrap">${s.stage}</span></td>
+                    <td class="py-2 pr-3 text-xs text-gray-500 whitespace-nowrap">${s.duration}</td>
+                    <td class="py-2 pr-3 text-xs text-gray-700">${s.fert}</td>
+                    <td class="py-2 pr-3 text-xs font-mono font-semibold ${s.npk==='—'?'text-gray-300':'text-green-700'}">${s.npk}</td>
+                    <td class="py-2 text-xs text-gray-500 hidden sm:table-cell">${s.method}</td>
+                  </tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleAcc(i) {
+  const content = document.getElementById('acc'+i);
+  const arrow = document.getElementById('arr'+i);
+  content.classList.toggle('open');
+  arrow.style.transform = content.classList.contains('open') ? 'rotate(180deg)' : '';
+}
+
+// =============================================
+// SEED SHOPS
+// =============================================
+function renderSeedShops() {
+  document.getElementById('seedShops').innerHTML = seedShops.map(s=>`
+    <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100 hover:shadow-md transition flex flex-col">
+      <div class="flex items-start gap-3 mb-3">
+        <span class="text-3xl">${s.logo}</span>
+        <div>
+          <h3 class="font-bold text-gray-800">${s.name}</h3>
+          <div class="flex gap-1 mt-1">
+            <span class="${s.badgeColor} text-xs px-2 py-0.5 rounded-full">${s.badge}</span>
+            <span class="bg-gray-100 text-gray-500 text-xs px-2 py-0.5 rounded-full">${s.tagEn}</span>
+          </div>
+        </div>
+      </div>
+      <p class="text-sm text-gray-600 mb-1">${s.desc}</p>
+      <div class="my-3 flex-1">
+        <p class="text-xs text-gray-400 mb-2">适合购买：</p>
+        <div class="flex flex-wrap gap-1">
+          ${s.items.map(item=>`<span class="text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded-full">${item}</span>`).join('')}
+        </div>
+      </div>
+      <a href="${s.url}" target="_blank" rel="noopener"
+         class="block text-center bg-green-700 hover:bg-green-600 text-white py-2.5 rounded-xl text-sm font-medium transition mt-2">
+        前往购买 →
+      </a>
+    </div>`).join('');
+}
+
+// =============================================
+// INIT
+// =============================================
+renderVeggies();
+renderCalendar();
+renderFertilizer();
+renderSeedShops();
+</script>
+</body>
+</html>
