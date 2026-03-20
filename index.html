@@ -63,17 +63,17 @@ h
     </div>
     <!-- Desktop nav -->
     <div class="hidden md:flex items-center gap-7">
-      <button onclick="scrollTo('gallery')"    class="nav-link text-sm font-medium text-gray-600 hover:text-green-700">🥬 蔬菜图鉴</button>
-      <button onclick="scrollTo('calendar')"   class="nav-link text-sm font-medium text-gray-600 hover:text-green-700">📅 播种指南</button>
-      <button onclick="scrollTo('fertilizer')" class="nav-link text-sm font-medium text-gray-600 hover:text-green-700">🌿 施肥指南</button>
-      <button onclick="scrollTo('seeds')"      class="nav-link text-sm font-medium text-gray-600 hover:text-green-700">🛒 购种推荐</button>
+      <button onclick="scrollToSection('gallery')"    class="nav-link text-sm font-medium text-gray-600 hover:text-green-700">🥬 蔬菜图鉴</button>
+      <button onclick="scrollToSection('calendar')"   class="nav-link text-sm font-medium text-gray-600 hover:text-green-700">📅 播种指南</button>
+      <button onclick="scrollToSection('fertilizer')" class="nav-link text-sm font-medium text-gray-600 hover:text-green-700">🌿 施肥指南</button>
+      <button onclick="scrollToSection('seeds')"      class="nav-link text-sm font-medium text-gray-600 hover:text-green-700">🛒 购种推荐</button>
     </div>
     <!-- Mobile nav -->
     <div class="flex md:hidden items-center gap-3 text-xs text-gray-500">
-      <button onclick="scrollTo('gallery')">图鉴</button>
-      <button onclick="scrollTo('calendar')">日历</button>
-      <button onclick="scrollTo('fertilizer')">施肥</button>
-      <button onclick="scrollTo('seeds')">购种</button>
+      <button onclick="scrollToSection('gallery')">图鉴</button>
+      <button onclick="scrollToSection('calendar')">日历</button>
+      <button onclick="scrollToSection('fertilizer')">施肥</button>
+      <button onclick="scrollToSection('seeds')">购种</button>
     </div>
   </div>
 </nav>
@@ -85,8 +85,8 @@ h
     <h1 class="text-4xl md:text-5xl font-bold mb-4 leading-tight">在海外，种一口<br>家乡的味道</h1>
     <p class="text-green-200 text-base md:text-lg max-w-xl mx-auto">根据你所在地的 USDA 温度带，告诉你什么时候种、种什么、怎么施肥</p>
     <div class="mt-8 flex flex-wrap justify-center gap-3">
-      <button onclick="scrollTo('gallery')"  class="bg-white text-green-800 px-6 py-2.5 rounded-full font-semibold hover:bg-green-50 transition text-sm">查看蔬菜图鉴 →</button>
-      <button onclick="scrollTo('calendar')" class="border border-white text-white px-6 py-2.5 rounded-full hover:bg-white hover:text-green-800 transition text-sm">播种日历</button>
+      <button onclick="scrollToSection('gallery')"  class="bg-white text-green-800 px-6 py-2.5 rounded-full font-semibold hover:bg-green-50 transition text-sm">查看蔬菜图鉴 →</button>
+      <button onclick="scrollToSection('calendar')" class="border border-white text-white px-6 py-2.5 rounded-full hover:bg-white hover:text-green-800 transition text-sm">播种日历</button>
     </div>
     <div class="mt-8 flex flex-wrap justify-center gap-4 text-xs text-green-300">
       <span>🗓️ 现在是 3月 · 春耕好时节</span>
@@ -242,10 +242,10 @@ h
     <p class="text-sm mt-1">专为海外华人打造的中国蔬菜种植指南</p>
     <p class="text-xs mt-4 text-green-400">购种推荐含联盟佣金链接 · Seed shopping links may include affiliate commissions</p>
     <div class="mt-6 flex justify-center gap-6 text-xs text-green-400">
-      <button onclick="scrollTo('gallery')" class="hover:text-white">蔬菜图鉴</button>
-      <button onclick="scrollTo('calendar')" class="hover:text-white">播种指南</button>
-      <button onclick="scrollTo('fertilizer')" class="hover:text-white">施肥指南</button>
-      <button onclick="scrollTo('seeds')" class="hover:text-white">购种推荐</button>
+      <button onclick="scrollToSection('gallery')" class="hover:text-white">蔬菜图鉴</button>
+      <button onclick="scrollToSection('calendar')" class="hover:text-white">播种指南</button>
+      <button onclick="scrollToSection('fertilizer')" class="hover:text-white">施肥指南</button>
+      <button onclick="scrollToSection('seeds')" class="hover:text-white">购种推荐</button>
     </div>
   </div>
 </footer>
@@ -458,7 +458,7 @@ function applyZone(z) {
 }
 
 // Smooth scroll helper (avoids href links triggering external-link warnings)
-function scrollTo(id) {
+function scrollToSection(id) {
   const el = document.getElementById(id);
   if (el) el.scrollIntoView({behavior:'smooth'});
 }
