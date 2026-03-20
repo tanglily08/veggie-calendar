@@ -18,7 +18,7 @@
 
     .filter-btn { transition: all 0.2s; }
     .filter-btn.active { background: #2d6a4f; color: white; border-color: #2d6a4f; }
-h
+
     .zone-btn { transition: all 0.2s; }
 
     .accordion-arrow { transition: transform 0.3s; }
@@ -47,6 +47,16 @@ h
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #f1f1f1; }
     ::-webkit-scrollbar-thumb { background: #52b788; border-radius: 3px; }
+
+    @media print {
+      nav, .hero-bg, #zonefinder, #gallery, #veggieModal, #calendar, #fertilizer, #seeds, #faq,
+      #myplan > div > .text-center, #myplan > div > div.rounded-2xl,
+      footer { display: none !important; }
+      #myPlanResult { display: block !important; }
+      .print-card { break-inside: avoid; page-break-inside: avoid; }
+      body { background: white; padding: 0; }
+      #myplan { padding: 0; }
+    }
   </style>
 </head>
 <body>
@@ -62,18 +72,22 @@ h
       </div>
     </div>
     <!-- Desktop nav -->
-    <div class="hidden md:flex items-center gap-7">
+    <div class="hidden md:flex items-center gap-5">
       <button onclick="scrollToSection('gallery')"    class="nav-link text-sm font-medium text-gray-600 hover:text-green-700">🥬 蔬菜图鉴</button>
       <button onclick="scrollToSection('calendar')"   class="nav-link text-sm font-medium text-gray-600 hover:text-green-700">📅 播种指南</button>
       <button onclick="scrollToSection('fertilizer')" class="nav-link text-sm font-medium text-gray-600 hover:text-green-700">🌿 施肥指南</button>
       <button onclick="scrollToSection('seeds')"      class="nav-link text-sm font-medium text-gray-600 hover:text-green-700">🛒 购种推荐</button>
+      <button onclick="scrollToSection('myplan')"     class="nav-link text-sm font-medium text-gray-600 hover:text-green-700">📋 种植计划</button>
+      <button onclick="scrollToSection('faq')"        class="nav-link text-sm font-medium text-gray-600 hover:text-green-700">❓ 常见问题</button>
     </div>
     <!-- Mobile nav -->
-    <div class="flex md:hidden items-center gap-3 text-xs text-gray-500">
-      <button onclick="scrollToSection('gallery')">图鉴</button>
-      <button onclick="scrollToSection('calendar')">日历</button>
-      <button onclick="scrollToSection('fertilizer')">施肥</button>
-      <button onclick="scrollToSection('seeds')">购种</button>
+    <div class="flex md:hidden items-center gap-2 text-xs text-gray-500 overflow-x-auto max-w-xs">
+      <button onclick="scrollToSection('gallery')"    class="shrink-0 px-2 py-1 rounded-full hover:bg-green-50 hover:text-green-700 transition">图鉴</button>
+      <button onclick="scrollToSection('calendar')"   class="shrink-0 px-2 py-1 rounded-full hover:bg-green-50 hover:text-green-700 transition">日历</button>
+      <button onclick="scrollToSection('fertilizer')" class="shrink-0 px-2 py-1 rounded-full hover:bg-green-50 hover:text-green-700 transition">施肥</button>
+      <button onclick="scrollToSection('seeds')"      class="shrink-0 px-2 py-1 rounded-full hover:bg-green-50 hover:text-green-700 transition">购种</button>
+      <button onclick="scrollToSection('myplan')"     class="shrink-0 px-2 py-1 rounded-full hover:bg-green-50 hover:text-green-700 transition">计划</button>
+      <button onclick="scrollToSection('faq')"        class="shrink-0 px-2 py-1 rounded-full hover:bg-green-50 hover:text-green-700 transition">问答</button>
     </div>
   </div>
 </nav>
@@ -89,7 +103,7 @@ h
       <button onclick="scrollToSection('calendar')" class="border border-white text-white px-6 py-2.5 rounded-full hover:bg-white hover:text-green-800 transition text-sm">播种日历</button>
     </div>
     <div class="mt-8 flex flex-wrap justify-center gap-4 text-xs text-green-300">
-      <span>🗓️ 现在是 3月 · 春耕好时节</span>
+      <span id="heroMonth">🗓️ 现在是 3月 · 春耕好时节</span>
       <span>·</span>
       <span>🌍 适用 USDA Zone 5 – 9</span>
       <span>·</span>
@@ -234,6 +248,68 @@ h
   </div>
 </section>
 
+<!-- ===== MY PLANTING PLAN ===== -->
+<section id="myplan" class="py-14 px-4 bg-white">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-10">
+      <h2 class="text-2xl md:text-3xl font-bold text-green-900 section-title">📋 我的种植计划</h2>
+      <p class="text-gray-400 mt-4 text-sm">My Planting Plan · 选好城市和蔬菜，一键生成你的专属种植日历</p>
+    </div>
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
+      <!-- Step 1: City -->
+      <div class="mb-7">
+        <p class="font-semibold text-gray-700 mb-3 flex items-center gap-2">
+          <span class="bg-green-700 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold shrink-0">1</span>
+          选择你的城市
+        </p>
+        <div class="relative max-w-md">
+          <input id="myPlanCityInput" type="text" placeholder="输入城市名（中文或英文）…"
+            class="w-full border-2 border-green-200 focus:border-green-500 rounded-xl px-4 py-3 text-sm outline-none transition"
+            oninput="onMyPlanCityInput(this.value)" autocomplete="off">
+          <div id="myPlanCitySuggestions" class="hidden absolute z-20 w-full bg-white border border-gray-100 rounded-xl shadow-xl mt-1 max-h-52 overflow-y-auto"></div>
+        </div>
+        <div id="myPlanZoneTag" class="hidden mt-2 text-sm text-green-700 font-medium"></div>
+      </div>
+      <!-- Step 2: Veggies -->
+      <div class="mb-7">
+        <div class="flex items-center justify-between mb-3">
+          <p class="font-semibold text-gray-700 flex items-center gap-2">
+            <span class="bg-green-700 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold shrink-0">2</span>
+            选择想种的蔬菜
+          </p>
+          <div class="flex gap-3 text-xs">
+            <button onclick="selectAllMyVeggies()" class="text-green-600 hover:text-green-800 hover:underline">全选</button>
+            <span class="text-gray-300">|</span>
+            <button onclick="clearAllMyVeggies()" class="text-gray-400 hover:text-gray-600 hover:underline">清空</button>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-1.5" id="myPlanVeggieList"></div>
+      </div>
+      <!-- Generate button -->
+      <button onclick="generateMyPlan()"
+        class="w-full bg-green-700 hover:bg-green-600 active:bg-green-800 text-white rounded-xl py-3.5 font-semibold transition text-sm shadow-sm">
+        🌱 生成我的种植计划 →
+      </button>
+    </div>
+    <!-- Result -->
+    <div id="myPlanResult" class="hidden mt-6"></div>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section id="faq" class="py-14 px-4 bg-green-50">
+  <div class="max-w-3xl mx-auto">
+    <div class="text-center mb-10">
+      <h2 class="text-2xl md:text-3xl font-bold text-green-900 section-title">❓ 常见问题</h2>
+      <p class="text-gray-400 mt-4 text-sm">FAQ · 海外华人种菜最常问的问题</p>
+    </div>
+    <div class="space-y-3" id="faqAccordion"></div>
+    <div class="mt-8 text-center">
+      <p class="text-sm text-gray-500">还有其他问题？<a href="mailto:tanglily080299@gmail.com" class="text-green-700 hover:underline font-medium">发邮件告诉我们 →</a></p>
+    </div>
+  </div>
+</section>
+
 <!-- ===== FOOTER ===== -->
 <footer class="bg-green-900 text-green-200 py-10 px-4">
   <div class="max-w-4xl mx-auto text-center">
@@ -241,6 +317,7 @@ h
     <p class="font-bold text-white text-lg">种菜日历 · Veggie Calendar</p>
     <p class="text-sm mt-1">专为海外华人打造的中国蔬菜种植指南</p>
     <p class="text-xs mt-4 text-green-400">购种推荐含联盟佣金链接 · Seed shopping links may include affiliate commissions</p>
+    <p class="text-xs mt-1 text-green-400">联系我们：<a href="mailto:tanglily080299@gmail.com" class="hover:text-white transition underline">tanglily080299@gmail.com</a></p>
     <div class="mt-6 flex justify-center gap-6 text-xs text-green-400">
       <button onclick="scrollToSection('gallery')" class="hover:text-white">蔬菜图鉴</button>
       <button onclick="scrollToSection('calendar')" class="hover:text-white">播种指南</button>
@@ -552,14 +629,14 @@ const fertData = [
     {stage:'营养生长',duration:'2–6周',fert:'高氮液肥',npk:'20-10-10',method:'每10天浇施1次'},
     {stage:'采收前',duration:'采收前1周',fert:'停肥',npk:'—',method:'停肥以保证口感'}],
     buys:[
-      {name:'Jack\'s Classic All Purpose 20-20-20',url:'https://www.amazon.com/s?k=espoma+garden+tone+organic+fertilizer'},
-      {name:'Neptune's Harvest Fish & Seaweed 有机液肥 2-3-1',url:'https://www.amazon.com/s?k=neptunes+harvest+fish+seaweed+fertilizer'}]},
+      {name:'Espoma Garden-tone 有机蔬菜颗粒肥 3-4-4',url:'https://www.amazon.com/s?k=espoma+garden+tone+organic+fertilizer'},
+      {name:'Neptune\'s Harvest Fish & Seaweed 有机液肥 2-3-1',url:'https://www.amazon.com/s?k=neptunes+harvest+fish+seaweed+fertilizer'}]},
   { group:'茼蒿', emoji:'🌿', stages:[
     {stage:'育苗期',duration:'0–2周',fert:'不施肥',npk:'—',method:'确保底肥充足即可'},
     {stage:'营养生长',duration:'2–5周',fert:'氮为主液肥',npk:'20-10-10',method:'每7-10天1次'},
     {stage:'割后追肥',duration:'每次割后3天内',fert:'高氮速溶肥',npk:'15-5-5',method:'割后3天内立刻追施促发'}],
     buys:[
-      {name:'高氮速溶肥 Jobe\'s Vegetable Spikes',url:'https://www.amazon.com/s?k=jobes+organics+vegetable+tomato+fertilizer+spikes'},
+      {name:'Jobe\'s Organics Vegetable & Tomato Spikes 有机蔬菜钉肥',url:'https://www.amazon.com/s?k=jobes+organics+vegetable+tomato+fertilizer+spikes'},
       {name:'Dr. Earth Organic Vegetable Fertilizer 有机蔬菜肥',url:'https://www.amazon.com/s?k=dr+earth+organic+vegetable+fertilizer'}]},
   { group:'苋菜 · 空心菜', emoji:'🥬', stages:[
     {stage:'苋菜全程',duration:'全程',fert:'高氮液肥',npk:'20-10-10',method:'每7天1次，喜肥，不要停'},
@@ -576,7 +653,7 @@ const fertData = [
     {stage:'持续采收',duration:'采收期',fert:'低量钾肥维持',npk:'5-5-10',method:'每2周1次'}],
     buys:[
       {name:'Espoma Tomato-tone 有机番茄专用肥',url:'https://www.amazon.com/s?k=espoma+tomato+tone+organic+fertilizer'},
-      {name:'Jack\'s Classic Tomato Feed 12-15-30',url:'https://www.amazon.com/s?k=dr+earth+organic+tomato+vegetable+herb+fertilizer'},
+      {name:'Dr. Earth Organic Tomato Vegetable & Herb Fertilizer',url:'https://www.amazon.com/s?k=dr+earth+organic+tomato+vegetable+herb+fertilizer'},
       {name:'Fox Farm Happy Frog Tomato & Vegetable 有机肥',url:'https://www.amazon.com/s?k=fox+farm+happy+frog+tomato+vegetable+fertilizer'}]},
   { group:'黄瓜', emoji:'🥒', stages:[
     {stage:'育苗期',duration:'0–3周',fert:'稀薄均衡液肥',npk:'10-10-10',method:'每2周1次'},
@@ -606,7 +683,7 @@ const fertData = [
     {stage:'开花结果',duration:'开花起',fert:'中氮高磷钾',npk:'8-16-16',method:'每7天1次'}],
     buys:[
       {name:'Espoma Garden-tone 有机蔬菜颗粒肥',url:'https://www.amazon.com/s?k=espoma+garden+tone+organic+fertilizer'},
-      {name:'Jack\'s Classic Blossom Booster 10-30-20',url:'https://www.amazon.com/s?k=dr+earth+organic+bud+bloom+fertilizer'}]},
+      {name:'Dr. Earth Organic Bud & Bloom 有机高磷促花肥',url:'https://www.amazon.com/s?k=dr+earth+organic+bud+bloom+fertilizer'}]},
   { group:'辣椒', emoji:'🌶️', stages:[
     {stage:'育苗期',duration:'0–6周',fert:'低氮启动肥',npk:'4-12-4',method:'每2周1次'},
     {stage:'营养生长',duration:'定植后2-5周',fert:'均衡复合肥',npk:'10-10-10',method:'每10天1次'},
@@ -647,21 +724,21 @@ const fertData = [
 ];
 
 const seedShops = [
+  { name:'Amazon', logo:'📦', tag:'快速配送', tagEn:'Prime Fast Delivery',
+    desc:'常见品种均有，适合买番茄、黄瓜等主流蔬菜种子和施肥工具，Prime 两日达',
+    badge:'Prime 速达', badgeColor:'bg-orange-100 text-orange-700',
+    url:'https://www.amazon.com/s?k=chinese+vegetable+seeds',
+    items:['番茄','黄瓜','菠菜','生菜','香菜','辣椒']},
   { name:'Kitazawa Seed', logo:'🏪', tag:'亚洲蔬菜专家', tagEn:'Asian Vegetable Specialist',
     desc:'美国最专业的亚洲蔬菜种子店，中日韩品种最全，1917年创立，信誉极佳',
-    badge:'首选推荐', badgeColor:'bg-green-100 text-green-700',
+    badge:'亚洲品种最全', badgeColor:'bg-green-100 text-green-700',
     url:'https://www.kitazawaseed.com',
     items:['苦瓜','丝瓜','茼蒿','苋菜','空心菜','豆角','上海青']},
   { name:'Evergreen Seeds', logo:'🌿', tag:'华人常用', tagEn:'Chinese-run Store',
     desc:'华人经营，专注亚洲蔬菜，品种地道，许多在国内常见的菜这里都有',
     badge:'华人推荐', badgeColor:'bg-blue-100 text-blue-700',
     url:'https://www.evergreenseeds.com',
-    items:['冬瓜','韭菜','大葱','空心菜','芹菜','苋菜']},
-  { name:'Amazon', logo:'📦', tag:'快速配送', tagEn:'Prime Fast Delivery',
-    desc:'常见品种均有，适合买番茄、黄瓜等主流蔬菜种子和施肥工具',
-    badge:'Prime 速达', badgeColor:'bg-orange-100 text-orange-700',
-    url:'https://www.amazon.com/s?k=chinese+vegetable+seeds',
-    items:['番茄','黄瓜','菠菜','生菜','香菜','辣椒']}
+    items:['冬瓜','韭菜','大葱','空心菜','芹菜','苋菜']}
 ];
 
 // =============================================
@@ -991,12 +1068,179 @@ function renderSeedShops() {
 }
 
 // =============================================
+// MY PLANTING PLAN
+// =============================================
+let myPlanZone = 5;
+let myPlanSelectedVeggies = new Set();
+
+function initMyPlan() {
+  document.getElementById('myPlanVeggieList').innerHTML = veggies.map(v => `
+    <label class="flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-green-50 border border-transparent hover:border-green-100 transition">
+      <input type="checkbox" value="${v.name}" onchange="toggleMyVeggie('${v.name}')"
+        class="w-4 h-4 rounded accent-green-600 shrink-0">
+      <span class="text-sm leading-tight">${typeEmoji(v.type)} ${v.name}</span>
+    </label>`).join('');
+  document.addEventListener('click', e => {
+    const inp = document.getElementById('myPlanCityInput');
+    if (inp && !inp.contains(e.target)) document.getElementById('myPlanCitySuggestions').classList.add('hidden');
+  });
+}
+
+function onMyPlanCityInput(val) {
+  const suggestions = document.getElementById('myPlanCitySuggestions');
+  if (!val || val.trim().length < 1) { suggestions.classList.add('hidden'); return; }
+  const matches = searchCities(val);
+  if (matches.length === 0) {
+    suggestions.innerHTML = '<div class="px-4 py-3 text-sm text-gray-400">未找到该城市，请尝试英文名</div>';
+    suggestions.classList.remove('hidden'); return;
+  }
+  suggestions.innerHTML = matches.map(city => `
+    <div class="px-4 py-3 hover:bg-green-50 cursor-pointer flex items-center justify-between border-b border-gray-50 last:border-0"
+         onclick="selectMyPlanCity(${JSON.stringify(city).replace(/"/g,'&quot;')})">
+      <div>
+        <span class="font-medium text-gray-800">${city.zh}</span>
+        <span class="text-gray-400 text-sm ml-2">${city.en}</span>
+      </div>
+      <span class="text-xs font-bold px-2 py-0.5 rounded-full text-white ${zoneDesc[city.zone]?.color || 'bg-gray-400'}">Zone ${city.zone}</span>
+    </div>`).join('');
+  suggestions.classList.remove('hidden');
+}
+
+function selectMyPlanCity(city) {
+  document.getElementById('myPlanCityInput').value = city.zh + ' / ' + city.en;
+  document.getElementById('myPlanCitySuggestions').classList.add('hidden');
+  myPlanZone = Math.min(Math.max(city.zone, 5), 9);
+  const tag = document.getElementById('myPlanZoneTag');
+  tag.textContent = `✅ 已选：${city.zh} → Zone ${city.zone}，将使用 Zone ${myPlanZone} 数据`;
+  tag.classList.remove('hidden');
+}
+
+function toggleMyVeggie(name) {
+  if (myPlanSelectedVeggies.has(name)) myPlanSelectedVeggies.delete(name);
+  else myPlanSelectedVeggies.add(name);
+}
+
+function selectAllMyVeggies() {
+  veggies.forEach(v => myPlanSelectedVeggies.add(v.name));
+  document.querySelectorAll('#myPlanVeggieList input[type=checkbox]').forEach(cb => cb.checked = true);
+}
+
+function clearAllMyVeggies() {
+  myPlanSelectedVeggies.clear();
+  document.querySelectorAll('#myPlanVeggieList input[type=checkbox]').forEach(cb => cb.checked = false);
+}
+
+function generateMyPlan() {
+  if (myPlanSelectedVeggies.size === 0) {
+    document.getElementById('myPlanResult').innerHTML =
+      '<p class="text-center text-red-400 text-sm mt-4 py-4">请先勾选至少一种蔬菜！</p>';
+    document.getElementById('myPlanResult').classList.remove('hidden');
+    return;
+  }
+  const selected = veggies.filter(v => myPlanSelectedVeggies.has(v.name));
+  const zone = myPlanZone;
+  const cards = selected.map(v => {
+    const zd = v.zones[zone];
+    return `
+    <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm print-card">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="text-2xl">${typeEmoji(v.type)}</span>
+        <div>
+          <div class="font-bold text-gray-800">${v.name}</div>
+          <div class="text-xs text-gray-400">${v.en}</div>
+        </div>
+        <span class="${typeColor(v.type)} text-xs px-2 py-0.5 rounded-full ml-auto">${v.type}</span>
+      </div>
+      <div class="space-y-1.5 text-xs">
+        <div class="flex gap-2 items-start"><span class="text-blue-500 w-16 shrink-0">🌱 播种</span><span class="text-gray-700">${zd.sow}</span></div>
+        ${zd.trans && zd.trans !== '—' ? `<div class="flex gap-2 items-start"><span class="text-green-500 w-16 shrink-0">🔄 移植</span><span class="text-gray-700">${zd.trans}</span></div>` : ''}
+        <div class="flex gap-2 items-start"><span class="text-orange-500 w-16 shrink-0">🌾 采收</span><span class="text-gray-700">${zd.harvest}</span></div>
+        <div class="flex gap-2 items-start"><span class="text-cyan-500 w-16 shrink-0">💧 浇水</span><span class="text-gray-700">${v.water}</span></div>
+      </div>
+      <div class="mt-3 text-xs text-amber-800 bg-amber-50 rounded-lg p-2 leading-relaxed">💡 ${v.notes}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('myPlanResult').innerHTML = `
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+      <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
+        <div>
+          <h3 class="font-bold text-green-900 text-lg">我的种植计划</h3>
+          <p class="text-xs text-gray-400 mt-0.5">Zone ${zone} · ${selected.length} 种蔬菜 · 可截图或打印保存</p>
+        </div>
+        <button onclick="window.print()" class="flex items-center gap-1.5 text-xs bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-xl transition font-medium">
+          🖨️ 打印 / 保存
+        </button>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">${cards}</div>
+    </div>`;
+  document.getElementById('myPlanResult').classList.remove('hidden');
+  setTimeout(() => document.getElementById('myPlanResult').scrollIntoView({behavior:'smooth'}), 100);
+}
+
+// =============================================
+// FAQ
+// =============================================
+const faqData = [
+  { q:'空心菜、苦瓜这类蔬菜在美国哪里能买到种子？',
+    a:'Kitazawa Seed 和 Evergreen Seeds 是最专业的亚洲蔬菜种子店，空心菜、苦瓜、苋菜等品种基本都有。Amazon 也可以找到，搜索英文名（如 "water spinach seeds"、"bitter melon seeds"）。当地 H-Mart、99 Ranch、T&T 等亚洲超市的种子货架也常有货，价格最实惠。'},
+  { q:'Zone 5 生长季那么短，苦瓜和丝瓜种得出来吗？',
+    a:'可以！关键是提前育苗——苦瓜建议 3 月初就在室内育苗（生长期约 80-100 天），等最后一次霜冻后立刻移植。地面铺黑色地膜保温、选最热的南向位置，都能帮助争取热量。建议选生长期较短的品种（如白苦瓜），收获问题不大。'},
+  { q:'为什么我的香菜总是种了没多久就抽薹开花？',
+    a:'香菜是凉季蔬菜，气温超过 22°C 就会迅速抽薹，叶子变小变苦。对策：① 在早春最凉爽的时期（或秋天）种植，避开夏季高温；② 选"慢抽薹"品种（slow-bolt cilantro）；③ 夏天改种罗勒，等秋凉了再补种香菜。'},
+  { q:'番茄要不要掐尖和打侧芽？',
+    a:'建议打掉腋芽（也叫侧芽或 sucker），即主茎和叶子之间长出的小嫩芽。尤其是无限生长型番茄（大多数亚洲品种），不打芽会枝叶过多、产量下降。每隔 1-2 周检查一次，小芽用手直接掰掉最干净。有限型（determinate）番茄则不需要频繁整枝。'},
+  { q:'什么是室内育苗？在家里需要什么设备？',
+    a:'室内育苗是在户外还太冷时，提前在家里把种子种到苗盘里，等天气暖和再移植出去。基础配置：育苗盘（seed tray）+ 种子专用育苗土（seed starting mix）+ 补光灯（普通 LED 植物灯即可）。放在灯下每天 12-16 小时，保持土壤湿润。普通桌面植物灯 $20 左右就够用，不需要买很贵的设备。'},
+  { q:'我在加拿大，这里的 Zone 数据和播种时间适用吗？',
+    a:'完全适用！我们的城市数据库已收录加拿大主要城市，包括多伦多（Zone 6）、温哥华（Zone 8）、卡尔加里（Zone 3-4）、蒙特利尔（Zone 5）等。直接在顶部城市搜索框输入城市名即可自动识别 Zone。'},
+  { q:'有机肥和化肥有什么区别，种菜用哪种好？',
+    a:'化肥（如 Miracle-Gro）见效快、价格低，但长期使用会板结土壤、破坏有益微生物。有机肥（如 Espoma、Dr. Earth）释放缓慢但能持续改善土壤结构，种出来的菜口感和营养价值更好。自家吃的菜推荐有机肥，也不会"烧苗"。本站施肥指南全部推荐有机肥品牌。'},
+  { q:'阳台或花盆里可以种这些蔬菜吗？',
+    a:'完全可以！叶菜类（生菜、菠菜、小白菜、香菜）适合 1-3 加仑小盆，是阳台种菜首选；韭菜、大葱种在长条花盆里可以反复割收；番茄、黄瓜、茄子需要至少 5 加仑深桶。阳台种植两个关键：① 浇水频率要比地栽高（花盆干得很快）；② 每 1-2 周追施一次液肥补充营养。南向阳台效果最好。'}
+];
+
+function renderFAQ() {
+  document.getElementById('faqAccordion').innerHTML = faqData.map((f, i) => `
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+      <button class="w-full px-5 py-4 flex items-start justify-between hover:bg-gray-50 transition text-left gap-3"
+              onclick="toggleFaq(${i})">
+        <span class="font-medium text-gray-800 text-sm leading-snug">${f.q}</span>
+        <span class="text-gray-400 text-sm accordion-arrow shrink-0 mt-0.5" id="faqArr${i}">▼</span>
+      </button>
+      <div class="accordion-content" id="faqAcc${i}">
+        <div class="px-5 pb-5 text-sm text-gray-600 leading-relaxed border-t border-gray-50 pt-3">
+          ${f.a}
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleFaq(i) {
+  const content = document.getElementById('faqAcc'+i);
+  const arrow = document.getElementById('faqArr'+i);
+  content.classList.toggle('open');
+  arrow.style.transform = content.classList.contains('open') ? 'rotate(180deg)' : '';
+}
+
+// =============================================
 // INIT
 // =============================================
 renderVeggies();
 renderCalendar();
 renderFertilizer();
 renderSeedShops();
+initMyPlan();
+renderFAQ();
+
+// Dynamic hero month
+(function() {
+  const months = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  const tips = ['冬末，开始准备育苗设备','春耕在即，可开始室内育苗','春耕最佳时机','春暖，开始移植幼苗','初夏，豆类可直播','盛夏，注意遮阳浇水','夏末，开始秋季规划','秋季蔬菜播种时节','凉秋，适合叶菜直播','秋收进行时','冬季临近，保护根茎类','冬季，规划来年种植'];
+  const m = new Date().getMonth();
+  const el = document.getElementById('heroMonth');
+  if (el) el.textContent = '\uD83D\uDDD3\uFE0F 现在是 ' + months[m] + ' · ' + tips[m];
+})();
 </script>
 </body>
 </html>
