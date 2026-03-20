@@ -18,7 +18,7 @@
 
     .filter-btn { transition: all 0.2s; }
     .filter-btn.active { background: #2d6a4f; color: white; border-color: #2d6a4f; }
-
+h
     .zone-btn { transition: all 0.2s; }
 
     .accordion-arrow { transition: transform 0.3s; }
@@ -669,7 +669,7 @@ function renderVeggies() {
   const filtered = currentFilter==='all' ? veggies : veggies.filter(v=>v.type===currentFilter);
   document.getElementById('veggieGrid').innerHTML = filtered.map(v => {
     const zd = v.zones[galleryZone];
-    const imgSrc = `素材/蔬菜图片/${v.name}.jpg`;
+    const imgSrc = `${v.name}.jpg`;
     return `
       <div class="veggie-card bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer border border-gray-100" onclick="showModal('${v.name}')">
         <div class="aspect-square overflow-hidden bg-gray-50">
@@ -706,7 +706,7 @@ function renderVeggies() {
 function showModal(name) {
   const v = veggies.find(x=>x.name===name);
   if (!v) return;
-  const imgSrc = `素材/蔬菜图片/${name}.jpg`;
+  const imgSrc = `${name}.jpg`;
   document.getElementById('modalContent').innerHTML = `
     <div class="relative">
       <img src="${imgSrc}" alt="${name}" class="w-full h-52 object-cover rounded-t-2xl"
