@@ -543,64 +543,107 @@ const fertData = [
   { group:'小白菜 · 上海青', emoji:'🥬', stages:[
     {stage:'育苗期',duration:'0–2周',fert:'稀薄有机液肥',npk:'5-1-1',method:'播种后7天起，每周1次，稀释10倍'},
     {stage:'营养生长',duration:'2–5周',fert:'高氮速溶肥',npk:'20-10-10',method:'每7-10天浇施1次'},
-    {stage:'采收维护',duration:'5周+',fert:'少量氮肥维持',npk:'10-5-5',method:'每2周1次即可'}]},
+    {stage:'采收维护',duration:'5周+',fert:'少量氮肥维持',npk:'10-5-5',method:'每2周1次即可'}],
+    buys:[
+      {name:'Fish Emulsion 5-1-1（鱼乳液肥）',url:'https://www.amazon.com/s?k=fish+emulsion+liquid+fertilizer+5-1-1'},
+      {name:'Miracle-Gro 高氮速溶肥 20-20-20',url:'https://www.amazon.com/s?k=miracle+gro+all+purpose+water+soluble+fertilizer'}]},
   { group:'生菜 · 菠菜', emoji:'🥬', stages:[
     {stage:'育苗期',duration:'0–2周',fert:'极稀薄液肥或不施',npk:'—',method:'有底肥即可，基本不需追肥'},
     {stage:'营养生长',duration:'2–6周',fert:'高氮液肥',npk:'20-10-10',method:'每10天浇施1次'},
-    {stage:'采收前',duration:'采收前1周',fert:'停肥',npk:'—',method:'停肥以保证口感'}]},
+    {stage:'采收前',duration:'采收前1周',fert:'停肥',npk:'—',method:'停肥以保证口感'}],
+    buys:[
+      {name:'Jack\'s Classic All Purpose 20-20-20',url:'https://www.amazon.com/s?k=jacks+classic+all+purpose+fertilizer+20-20-20'},
+      {name:'有机叶菜液肥 Leafy Greens Fertilizer',url:'https://www.amazon.com/s?k=organic+leafy+greens+liquid+fertilizer'}]},
   { group:'茼蒿', emoji:'🌿', stages:[
     {stage:'育苗期',duration:'0–2周',fert:'不施肥',npk:'—',method:'确保底肥充足即可'},
     {stage:'营养生长',duration:'2–5周',fert:'氮为主液肥',npk:'20-10-10',method:'每7-10天1次'},
-    {stage:'割后追肥',duration:'每次割后3天内',fert:'高氮速溶肥',npk:'15-5-5',method:'割后3天内立刻追施促发'}]},
+    {stage:'割后追肥',duration:'每次割后3天内',fert:'高氮速溶肥',npk:'15-5-5',method:'割后3天内立刻追施促发'}],
+    buys:[
+      {name:'高氮速溶肥 Jobe\'s Vegetable Spikes',url:'https://www.amazon.com/s?k=jobes+vegetable+fertilizer+spikes'},
+      {name:'Schultz All Purpose Liquid Plant Food 10-15-10',url:'https://www.amazon.com/s?k=schultz+all+purpose+liquid+plant+food'}]},
   { group:'苋菜 · 空心菜', emoji:'🥬', stages:[
     {stage:'苋菜全程',duration:'全程',fert:'高氮液肥',npk:'20-10-10',method:'每7天1次，喜肥，不要停'},
-    {stage:'空心菜全程',duration:'全程',fert:'均衡+高氮',npk:'15-10-10',method:'每7天1次，保持水分'}]},
+    {stage:'空心菜全程',duration:'全程',fert:'均衡+高氮',npk:'15-10-10',method:'每7天1次，保持水分'}],
+    buys:[
+      {name:'Fox Farm Grow Big 高氮液肥',url:'https://www.amazon.com/s?k=fox+farm+grow+big+liquid+fertilizer'},
+      {name:'General Hydroponics Flora Series（高氮型）',url:'https://www.amazon.com/s?k=general+hydroponics+floragro'}]},
   { group:'番茄', emoji:'🍅', stages:[
     {stage:'育苗期',duration:'0–6周',fert:'低氮启动肥',npk:'4-12-4',method:'2叶期起每2周1次，稀释'},
     {stage:'定植缓苗',duration:'定植后1-2周',fert:'不施或极少',npk:'—',method:'缓苗期不施，等新叶萌出'},
     {stage:'营养生长',duration:'定植后2-5周',fert:'均衡复合肥',npk:'10-10-10',method:'每7-10天1次'},
     {stage:'开花坐果',duration:'开花期',fert:'低氮高磷钾',npk:'5-10-15',method:'每7天1次'},
     {stage:'结果盛期',duration:'挂果期',fert:'高钾专用番茄肥',npk:'8-32-16',method:'每5-7天1次'},
-    {stage:'持续采收',duration:'采收期',fert:'低量钾肥维持',npk:'5-5-10',method:'每2周1次'}]},
+    {stage:'持续采收',duration:'采收期',fert:'低量钾肥维持',npk:'5-5-10',method:'每2周1次'}],
+    buys:[
+      {name:'Espoma Tomato-tone 有机番茄专用肥',url:'https://www.amazon.com/s?k=espoma+tomato+tone+organic+fertilizer'},
+      {name:'Jack\'s Classic Tomato Feed 12-15-30',url:'https://www.amazon.com/s?k=jacks+classic+tomato+feed+fertilizer'},
+      {name:'Fox Farm Big Bloom + Tiger Bloom 套装',url:'https://www.amazon.com/s?k=fox+farm+big+bloom+tiger+bloom'}]},
   { group:'黄瓜', emoji:'🥒', stages:[
     {stage:'育苗期',duration:'0–3周',fert:'稀薄均衡液肥',npk:'10-10-10',method:'每2周1次'},
     {stage:'定植缓苗',duration:'定植后1周',fert:'不施',npk:'—',method:'缓苗期不施'},
     {stage:'营养生长',duration:'定植后2-4周',fert:'均衡复合肥',npk:'15-15-15',method:'每10天1次'},
     {stage:'开花坐果',duration:'开花期',fert:'低氮高钾',npk:'5-10-15',method:'每7天1次'},
-    {stage:'结果盛期',duration:'挂果期',fert:'高钾复合肥',npk:'8-16-24',method:'每5-7天1次'}]},
+    {stage:'结果盛期',duration:'挂果期',fert:'高钾复合肥',npk:'8-16-24',method:'每5-7天1次'}],
+    buys:[
+      {name:'Cucumber & Squash 专用肥',url:'https://www.amazon.com/s?k=cucumber+fertilizer+vegetable+garden'},
+      {name:'Dr. Earth Organic Vegetable Fertilizer',url:'https://www.amazon.com/s?k=dr+earth+organic+vegetable+fertilizer'}]},
   { group:'苦瓜 · 丝瓜', emoji:'🍈', stages:[
     {stage:'育苗期',duration:'0–4周',fert:'稀薄均衡',npk:'10-10-10',method:'每2周1次'},
     {stage:'营养生长',duration:'定植后2-5周',fert:'均衡复合肥',npk:'15-10-10',method:'每10天1次'},
-    {stage:'开花结果',duration:'开花起',fert:'高磷高钾',npk:'5-15-20',method:'每7天1次'}]},
+    {stage:'开花结果',duration:'开花起',fert:'高磷高钾',npk:'5-15-20',method:'每7天1次'}],
+    buys:[
+      {name:'Osmocote Plus 缓释颗粒肥 15-9-12',url:'https://www.amazon.com/s?k=osmocote+plus+slow+release+fertilizer'},
+      {name:'Bloom Booster 高磷促花肥 10-30-20',url:'https://www.amazon.com/s?k=bloom+booster+fertilizer+10-30-20'}]},
   { group:'冬瓜', emoji:'🟢', stages:[
     {stage:'营养生长',duration:'全程前期',fert:'均衡复合肥',npk:'15-15-15',method:'每10天1次'},
-    {stage:'结果盛期',duration:'挂果期',fert:'高钾肥',npk:'5-10-20',method:'每7天1次'}]},
+    {stage:'结果盛期',duration:'挂果期',fert:'高钾肥',npk:'5-10-20',method:'每7天1次'}],
+    buys:[
+      {name:'Miracle-Gro Shake \'N Feed 蔬菜肥',url:'https://www.amazon.com/s?k=miracle+gro+shake+feed+vegetable+fertilizer'},
+      {name:'Potassium Sulfate 硫酸钾（高钾）',url:'https://www.amazon.com/s?k=potassium+sulfate+fertilizer+garden'}]},
   { group:'茄子', emoji:'🍆', stages:[
     {stage:'育苗期',duration:'0–6周',fert:'低氮启动肥',npk:'4-12-4',method:'每2周稀薄施'},
     {stage:'营养生长',duration:'定植后2-5周',fert:'均衡复合肥',npk:'10-10-10',method:'每10天1次'},
-    {stage:'开花结果',duration:'开花起',fert:'中氮高磷钾',npk:'8-16-16',method:'每7天1次'}]},
+    {stage:'开花结果',duration:'开花起',fert:'中氮高磷钾',npk:'8-16-16',method:'每7天1次'}],
+    buys:[
+      {name:'Espoma Garden-tone 有机蔬菜颗粒肥',url:'https://www.amazon.com/s?k=espoma+garden+tone+organic+fertilizer'},
+      {name:'Jack\'s Classic Blossom Booster 10-30-20',url:'https://www.amazon.com/s?k=jacks+classic+blossom+booster+fertilizer'}]},
   { group:'辣椒', emoji:'🌶️', stages:[
     {stage:'育苗期',duration:'0–6周',fert:'低氮启动肥',npk:'4-12-4',method:'每2周1次'},
     {stage:'营养生长',duration:'定植后2-5周',fert:'均衡复合肥',npk:'10-10-10',method:'每10天1次'},
     {stage:'开花坐果',duration:'开花期',fert:'低氮高磷',npk:'5-20-10',method:'每7天1次'},
-    {stage:'结果盛期',duration:'挂果期',fert:'高钾复合肥',npk:'8-12-24',method:'每7天1次'}]},
+    {stage:'结果盛期',duration:'挂果期',fert:'高钾复合肥',npk:'8-12-24',method:'每7天1次'}],
+    buys:[
+      {name:'Pepper & Herb Fertilizer 辣椒专用肥',url:'https://www.amazon.com/s?k=pepper+fertilizer+garden'},
+      {name:'Fox Farm Liquid Nutrient Trio 套装',url:'https://www.amazon.com/s?k=fox+farm+liquid+nutrient+trio+soil+formula'}]},
   { group:'豆角 · 豌豆 · 毛豆', emoji:'🫘', stages:[
     {stage:'育苗期',duration:'0–2周',fert:'不施或极少',npk:'—',method:'豆科固氮，施氮适得其反'},
     {stage:'营养生长',duration:'2–4周',fert:'低氮磷为主',npk:'5-10-5',method:'移栽后2周施1次底肥'},
-    {stage:'开花结荚',duration:'开花期',fert:'高磷高钾',npk:'5-15-15',method:'每7-10天1次'}]},
+    {stage:'开花结荚',duration:'开花期',fert:'高磷高钾',npk:'5-15-15',method:'每7-10天1次'}],
+    buys:[
+      {name:'Legume Inoculant 豆科根瘤菌接种剂',url:'https://www.amazon.com/s?k=legume+inoculant+bean+pea'},
+      {name:'Neptune\'s Harvest 低氮磷钾液肥 2-6-1',url:'https://www.amazon.com/s?k=neptunes+harvest+fertilizer'}]},
   { group:'韭菜', emoji:'🌿', stages:[
     {stage:'育苗期',duration:'0–4周',fert:'稀薄均衡液肥',npk:'10-10-10',method:'每2周1次'},
     {stage:'营养生长',duration:'定植后',fert:'高氮为主',npk:'20-10-10',method:'每10天1次'},
-    {stage:'割后追肥',duration:'每次割后3天内',fert:'高氮速溶肥',npk:'20-5-5',method:'割后3天内施，量要足'}]},
+    {stage:'割后追肥',duration:'每次割后3天内',fert:'高氮速溶肥',npk:'20-5-5',method:'割后3天内施，量要足'}],
+    buys:[
+      {name:'Jobe\'s Organics Herb Fertilizer Spikes',url:'https://www.amazon.com/s?k=jobes+organics+herb+fertilizer+spikes'},
+      {name:'高氮速溶肥 Peters Professional 20-20-20',url:'https://www.amazon.com/s?k=peters+professional+20-20-20+fertilizer'}]},
   { group:'大葱', emoji:'🧅', stages:[
     {stage:'育苗期',duration:'0–4周',fert:'稀薄均衡',npk:'10-10-10',method:'每2周1次'},
     {stage:'营养生长',duration:'定植后2-8周',fert:'高氮复合肥',npk:'20-10-10',method:'每10天1次'},
-    {stage:'葱白发育',duration:'采收前4周',fert:'低氮高钾',npk:'5-10-15',method:'每10天1次，促葱白增粗'}]},
+    {stage:'葱白发育',duration:'采收前4周',fert:'低氮高钾',npk:'5-10-15',method:'每10天1次，促葱白增粗'}],
+    buys:[
+      {name:'Onion & Garlic 洋葱大蒜专用肥',url:'https://www.amazon.com/s?k=onion+garlic+fertilizer'},
+      {name:'Sulfate of Potash 硫酸钾高钾肥',url:'https://www.amazon.com/s?k=sulfate+of+potash+garden+fertilizer'}]},
   { group:'香菜 · 芹菜', emoji:'🌿', stages:[
     {stage:'香菜全程',duration:'全程',fert:'少量均衡',npk:'10-10-10',method:'每3周1次即可，不可过肥'},
     {stage:'芹菜育苗期',duration:'0–4周',fert:'稀薄均衡',npk:'10-10-10',method:'每2周1次'},
     {stage:'芹菜营养生长',duration:'定植后2-6周',fert:'高氮均衡肥',npk:'20-10-10',method:'每7-10天1次'},
-    {stage:'芹菜茎秆发育',duration:'采收前4周',fert:'均衡+少量钾',npk:'15-10-15',method:'每10天1次'}]}
+    {stage:'芹菜茎秆发育',duration:'采收前4周',fert:'均衡+少量钾',npk:'15-10-15',method:'每10天1次'}],
+    buys:[
+      {name:'Herb & Vegetable Liquid Fertilizer 草本蔬菜液肥',url:'https://www.amazon.com/s?k=herb+vegetable+liquid+fertilizer+organic'},
+      {name:'Espoma Bio-tone Starter Plus 有机底肥',url:'https://www.amazon.com/s?k=espoma+biotone+starter+plus'}]}
 ];
 
 const seedShops = [
@@ -894,6 +937,17 @@ function renderFertilizer() {
               </tbody>
             </table>
           </div>
+          ${g.buys && g.buys.length ? `
+          <div class="mt-4 pt-3 border-t border-gray-100">
+            <p class="text-xs text-gray-400 mb-2">🛒 推荐购买（Amazon）：</p>
+            <div class="flex flex-wrap gap-2">
+              ${g.buys.map(b=>`
+                <a href="${b.url}" target="_blank" rel="noopener"
+                   class="inline-flex items-center gap-1 text-xs bg-orange-50 text-orange-700 border border-orange-200 hover:bg-orange-100 px-3 py-1.5 rounded-full transition">
+                  📦 ${b.name}
+                </a>`).join('')}
+            </div>
+          </div>` : ''}
         </div>
       </div>
     </div>`).join('');
