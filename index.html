@@ -552,12 +552,9 @@ document.addEventListener('click', e => {
 // DATA
 // =============================================
 const veggies = [
-  { name:'小白菜', en:'Bok Choy', type:'叶菜', temp:'15-25°C', days:'35-50天', water:'每2天', notes:'速生耐寒，注意防蚜虫，可多次分批采收',
+  { name:'小白菜', en:'Bok Choy / Shanghai', type:'叶菜', temp:'15-25°C', days:'30-50天', water:'每2天', notes:'速生耐寒，可多次分批采收，注意防蚜虫。上海青叶柄更嫩圆润，小白菜叶片更展开，两者种法相同',
     zones:{5:{sow:'3月室内',trans:'5月初移',harvest:'6-7月'},6:{sow:'2月室内',trans:'4月中移',harvest:'5-6月'},7:{sow:'2月室内',trans:'3月下移',harvest:'4-5月'},8:{sow:'2-3月直播',trans:'—',harvest:'4-5月'},9:{sow:'1-2月直播',trans:'—',harvest:'3-4月'}},
-    seeds:{amz:'https://www.amazon.com/s?k=bok+choy+seeds',kit:'https://www.kitazawaseed.com/search.html?q=bok+choy',evg:'https://www.evergreenseeds.com/search?q=bok+choy'}},
-  { name:'上海青', en:'Shanghai Bok Choy', type:'叶菜', temp:'15-25°C', days:'30-45天', water:'每2天', notes:'与小白菜相似，叶柄更嫩，炒食口感更佳',
-    zones:{5:{sow:'3月室内',trans:'5月初',harvest:'6-7月'},6:{sow:'2月室内',trans:'4月初',harvest:'5-6月'},7:{sow:'2月室内',trans:'3月下',harvest:'4-5月'},8:{sow:'2-3月直播',trans:'—',harvest:'4-5月'},9:{sow:'1月直播',trans:'—',harvest:'3-4月'}},
-    seeds:{amz:'https://www.amazon.com/s?k=shanghai+bok+choy+seeds',kit:'https://www.kitazawaseed.com/search.html?q=shanghai+bok+choy',evg:'https://www.evergreenseeds.com/search?q=shanghai+bok+choy'}},
+    seeds:{amz:'https://www.amazon.com/s?k=bok+choy+shanghai+seeds',kit:'https://www.kitazawaseed.com/search.html?q=bok+choy',evg:'https://www.evergreenseeds.com/search?q=bok+choy'}},
   { name:'生菜', en:'Lettuce', type:'叶菜', temp:'15-20°C', days:'45-60天', water:'每2天', notes:'高温超25°C易抽薹，凉季效果最佳',
     zones:{5:{sow:'3月室内',trans:'5月初',harvest:'6-7月'},6:{sow:'2月室内',trans:'4月初',harvest:'5-6月'},7:{sow:'2月直播',trans:'—',harvest:'4-5月'},8:{sow:'1月直播',trans:'—',harvest:'3-4月'},9:{sow:'1月直播',trans:'—',harvest:'2-3月'}},
     seeds:{amz:'https://www.amazon.com/s?k=chinese+lettuce+seeds',kit:'https://www.kitazawaseed.com/search.html?q=lettuce',evg:'https://www.evergreenseeds.com/search?q=lettuce'}},
@@ -797,7 +794,7 @@ function renderVeggies() {
   const filtered = currentFilter==='all' ? veggies : veggies.filter(v=>v.type===currentFilter);
   document.getElementById('veggieGrid').innerHTML = filtered.map(v => {
     const zd = v.zones[galleryZone];
-    const imgSrc = `${v.name}.jpg`;
+    const imgSrc = `https://tanglily08.github.io/veggie-calendar/${v.name}.jpg`;
     return `
       <div class="veggie-card bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer border border-gray-100" onclick="showModal('${v.name}')">
         <div class="aspect-square overflow-hidden bg-gray-50">
@@ -834,7 +831,7 @@ function renderVeggies() {
 function showModal(name) {
   const v = veggies.find(x=>x.name===name);
   if (!v) return;
-  const imgSrc = `${name}.jpg`;
+  const imgSrc = `https://tanglily08.github.io/veggie-calendar/${name}.jpg`;
   document.getElementById('modalContent').innerHTML = `
     <div class="relative">
       <img src="${imgSrc}" alt="${name}" class="w-full h-52 object-cover rounded-t-2xl"
