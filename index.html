@@ -313,9 +313,60 @@
       <p class="text-gray-400 mt-4 text-sm">FAQ · 海外华人种菜最常问的问题</p>
     </div>
     <div class="space-y-3" id="faqAccordion"></div>
-    <div class="mt-8 text-center">
-      <p class="text-sm text-gray-500">还有其他问题？<a href="https://github.com/tanglily08/veggie-calendar/issues/new?title=问题反馈" target="_blank" rel="noopener" class="text-green-700 hover:underline font-medium">提交反馈 →</a></p>
+    <!-- 反馈表单 -->
+    <div class="mt-10 bg-white rounded-2xl shadow-sm border border-green-100 p-6 max-w-xl mx-auto">
+      <h3 class="text-base font-semibold text-gray-800 mb-1">💬 还有其他问题或建议？</h3>
+      <p class="text-sm text-gray-500 mb-4">留言给我，我会尽快回复你 🌱</p>
+      <form id="feedbackForm" action="https://api.web3forms.com/submit" method="POST" class="space-y-3">
+        <input type="hidden" name="access_key" value="a6b491b5-7246-444e-8e9b-40535602ceb1">
+        <input type="hidden" name="subject" value="种菜日历 · 用户反馈">
+        <input type="hidden" name="from_name" value="种菜日历网站">
+        <input type="hidden" name="redirect" value="false">
+        <input type="checkbox" name="botcheck" class="hidden" style="display:none">
+        <div class="flex gap-3">
+          <input type="text" name="name" placeholder="你的称呼（选填）"
+            class="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-200">
+          <input type="email" name="email" placeholder="你的邮箱（选填）"
+            class="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-200">
+        </div>
+        <textarea name="message" rows="3" placeholder="写下你的问题或建议…" required
+          class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-200 resize-none"></textarea>
+        <button type="submit"
+          class="w-full bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-2 rounded-lg transition-colors">
+          发送反馈 →
+        </button>
+        <p id="feedbackMsg" class="text-center text-sm hidden"></p>
+      </form>
     </div>
+    <script>
+    document.getElementById('feedbackForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = this.querySelector('button[type=submit]');
+      const msg = document.getElementById('feedbackMsg');
+      btn.textContent = '发送中…';
+      btn.disabled = true;
+      try {
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          body: new FormData(this)
+        });
+        const data = await res.json();
+        if (data.success) {
+          msg.textContent = '✅ 感谢你的反馈，我会尽快回复！';
+          msg.className = 'text-center text-sm text-green-600 mt-1';
+          this.reset();
+        } else {
+          throw new Error();
+        }
+      } catch {
+        msg.textContent = '❌ 发送失败，请稍后重试';
+        msg.className = 'text-center text-sm text-red-500 mt-1';
+      }
+      msg.classList.remove('hidden');
+      btn.textContent = '发送反馈 →';
+      btn.disabled = false;
+    });
+    </script>
   </div>
 </section>
 
