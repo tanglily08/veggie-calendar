@@ -613,73 +613,73 @@ document.addEventListener('click', e => {
 const veggies = [
   { name:'小白菜', en:'Bok Choy', type:'叶菜', temp:'15-25°C', days:'30-50天', water:'每2天', notes:'速生耐寒，叶片展开宽大，可多次分批采收，注意防蚜虫',
     zones:{5:{sow:'3月室内',trans:'5月初移',harvest:'6-7月'},6:{sow:'2月室内',trans:'4月中移',harvest:'5-6月'},7:{sow:'2月室内',trans:'3月下移',harvest:'4-5月'},8:{sow:'2-3月直播',trans:'—',harvest:'4-5月'},9:{sow:'1-2月直播',trans:'—',harvest:'3-4月'}},
-    seeds:{amz:'https://www.amazon.com/s?k=Pak+Choi+Chinese+Cabbage+小白菜&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=bok+choy',evg:'https://www.evergreenseeds.com/search?q=bok+choy'}},
+    seeds:{amz:'https://www.amazon.com/s?k=Pak+Choi+Chinese+Cabbage+小白菜&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=bok+choy'}},
   { name:'上海青', en:'Shanghai Bok Choy', type:'叶菜', temp:'15-25°C', days:'30-45天', water:'每2天', notes:'叶柄嫩圆润、颜色翠绿，比小白菜生长更快，口感鲜嫩，适合清炒和做汤',
     zones:{5:{sow:'3月室内',trans:'5月初移',harvest:'6-7月'},6:{sow:'2月室内',trans:'4月中移',harvest:'5-6月'},7:{sow:'2月室内',trans:'3月下移',harvest:'4-5月'},8:{sow:'2-3月直播',trans:'—',harvest:'4-5月'},9:{sow:'1-2月直播',trans:'—',harvest:'3-4月'}},
-    seeds:{amz:'https://www.amazon.com/s?k=Shanghai+Bok+Choy+seeds+上海青&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=shanghai+bok+choy',evg:'https://www.evergreenseeds.com/search?q=shanghai+bok+choy'}},
+    seeds:{amz:'https://www.amazon.com/s?k=Shanghai+Bok+Choy+seeds+上海青&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=shanghai+bok+choy'}},
   { name:'生菜', en:'Lettuce', type:'叶菜', temp:'15-20°C', days:'45-60天', water:'每2天', notes:'高温超25°C易抽薹，凉季效果最佳',
     zones:{5:{sow:'3月室内',trans:'5月初',harvest:'6-7月'},6:{sow:'2月室内',trans:'4月初',harvest:'5-6月'},7:{sow:'2月直播',trans:'—',harvest:'4-5月'},8:{sow:'1月直播',trans:'—',harvest:'3-4月'},9:{sow:'1月直播',trans:'—',harvest:'2-3月'}},
-    seeds:{amz:'https://www.amazon.com/s?k=chinese+lettuce+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=lettuce',evg:'https://www.evergreenseeds.com/search?q=lettuce'}},
+    seeds:{amz:'https://www.amazon.com/s?k=chinese+lettuce+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=lettuce'}},
   { name:'菠菜', en:'Spinach', type:'叶菜', temp:'10-20°C', days:'40-55天', water:'每2天', notes:'极耐寒，可早春直播，温带地区春秋两季均可种',
     zones:{5:{sow:'4月直播',trans:'—',harvest:'6月'},6:{sow:'3月直播',trans:'—',harvest:'5月'},7:{sow:'2月直播',trans:'—',harvest:'4月'},8:{sow:'1-2月直播',trans:'—',harvest:'3-4月'},9:{sow:'1月直播',trans:'—',harvest:'2-3月'}},
-    seeds:{amz:'https://www.amazon.com/s?k=spinach+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=spinach',evg:'https://www.evergreenseeds.com/search?q=spinach'}},
+    seeds:{amz:'https://www.amazon.com/s?k=spinach+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=spinach'}},
   { name:'茼蒿', en:'Chrysanthemum Greens', type:'叶菜', temp:'15-20°C', days:'35-50天', water:'每2天', notes:'耐寒，可多次割叶，割后3天内追肥促发',
     zones:{5:{sow:'4月直播',trans:'—',harvest:'6月'},6:{sow:'3月直播',trans:'—',harvest:'5月'},7:{sow:'3月直播',trans:'—',harvest:'4-5月'},8:{sow:'2-3月直播',trans:'—',harvest:'4月'},9:{sow:'2月直播',trans:'—',harvest:'3-4月'}},
-    seeds:{amz:'https://www.amazon.com/s?k=shungiku+chrysanthemum+greens+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=shungiku',evg:'https://www.evergreenseeds.com/search?q=chrysanthemum+greens'}},
+    seeds:{amz:'https://www.amazon.com/s?k=shungiku+chrysanthemum+greens+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=shungiku'}},
   { name:'苋菜', en:'Amaranth', type:'叶菜', temp:'20-30°C', days:'30-45天', water:'每2天', notes:'喜热不耐寒，气温稳定后再播，产量高',
     zones:{5:{sow:'5月直播',trans:'—',harvest:'7月'},6:{sow:'5月直播',trans:'—',harvest:'6-7月'},7:{sow:'4月直播',trans:'—',harvest:'6月'},8:{sow:'3-4月直播',trans:'—',harvest:'5-6月'},9:{sow:'3月直播',trans:'—',harvest:'5月'}},
-    seeds:{amz:'https://www.amazon.com/s?k=amaranth+vegetable+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=amaranth',evg:'https://www.evergreenseeds.com/search?q=amaranth'}},
+    seeds:{amz:'https://www.amazon.com/s?k=amaranth+vegetable+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=amaranth'}},
   { name:'空心菜', en:'Water Spinach', type:'叶菜', temp:'25-35°C', days:'30-45天', water:'每天', notes:'喜高温高湿，华南风味，可水培或土培',
     zones:{5:{sow:'5月室内',trans:'6月',harvest:'7-8月'},6:{sow:'5月直播',trans:'—',harvest:'7-8月'},7:{sow:'4月直播',trans:'—',harvest:'6-8月'},8:{sow:'3-4月直播',trans:'—',harvest:'5-8月'},9:{sow:'3月直播',trans:'—',harvest:'5-8月'}},
-    seeds:{amz:'https://www.amazon.com/s?k=water+spinach+seeds+ong+choy&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=water+spinach',evg:'https://www.evergreenseeds.com/search?q=water+spinach'}},
+    seeds:{amz:'https://www.amazon.com/s?k=water+spinach+seeds+ong+choy&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=water+spinach'}},
   { name:'番茄', en:'Tomato', type:'瓜果', temp:'20-28°C', days:'70-90天', water:'每2天', notes:'喜阳充足，需搭架，丰产之王，建议早育苗',
     zones:{5:{sow:'3月室内',trans:'5月底',harvest:'7-9月'},6:{sow:'2月室内',trans:'5月中',harvest:'7-9月'},7:{sow:'2月室内',trans:'4月底',harvest:'6-9月'},8:{sow:'1月室内',trans:'3月',harvest:'5-8月'},9:{sow:'1月室内',trans:'2-3月',harvest:'5-8月'}},
-    seeds:{amz:'https://www.amazon.com/s?k=asian+tomato+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=tomato',evg:'https://www.evergreenseeds.com/search?q=tomato'}},
+    seeds:{amz:'https://www.amazon.com/s?k=asian+tomato+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=tomato'}},
   { name:'黄瓜', en:'Cucumber', type:'瓜果', temp:'22-28°C', days:'50-65天', water:'每天', notes:'需搭架，喜温不耐霜，保持土壤湿润',
     zones:{5:{sow:'4月室内',trans:'5月底',harvest:'7-8月'},6:{sow:'4月室内',trans:'5月中',harvest:'6-8月'},7:{sow:'3月室内',trans:'4月底',harvest:'6-8月'},8:{sow:'2月室内',trans:'3月',harvest:'5-7月'},9:{sow:'2月直播',trans:'—',harvest:'4-6月'}},
-    seeds:{amz:'https://www.amazon.com/s?k=asian+cucumber+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=cucumber',evg:'https://www.evergreenseeds.com/search?q=cucumber'}},
+    seeds:{amz:'https://www.amazon.com/s?k=asian+cucumber+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=cucumber'}},
   { name:'苦瓜', en:'Bitter Melon', type:'瓜果', temp:'25-30°C', days:'80-100天', water:'每天', notes:'需长生长季，Zone 5须在3月就开始室内育苗',
     zones:{5:{sow:'3月室内',trans:'5月底',harvest:'8-9月'},6:{sow:'3月室内',trans:'5月中',harvest:'8-9月'},7:{sow:'2月室内',trans:'4月底',harvest:'7-9月'},8:{sow:'1月室内',trans:'3月',harvest:'6-8月'},9:{sow:'1月室内',trans:'2-3月',harvest:'5-8月'}},
-    seeds:{amz:'https://www.amazon.com/s?k=bitter+melon+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=bitter+melon',evg:'https://www.evergreenseeds.com/search?q=bitter+melon'}},
+    seeds:{amz:'https://www.amazon.com/s?k=bitter+melon+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=bitter+melon'}},
   { name:'丝瓜', en:'Luffa', type:'瓜果', temp:'25-35°C', days:'70-90天', water:'每天', notes:'需长季节，成熟可做天然丝瓜络，需搭架',
     zones:{5:{sow:'3月室内',trans:'5月底',harvest:'8-9月'},6:{sow:'3月室内',trans:'5月中',harvest:'8-9月'},7:{sow:'2月室内',trans:'4月底',harvest:'7-9月'},8:{sow:'2月室内',trans:'3月',harvest:'6-8月'},9:{sow:'1月室内',trans:'2-3月',harvest:'5-8月'}},
-    seeds:{amz:'https://www.amazon.com/s?k=luffa+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=luffa',evg:'https://www.evergreenseeds.com/search?q=luffa'}},
+    seeds:{amz:'https://www.amazon.com/s?k=luffa+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=luffa'}},
   { name:'冬瓜', en:'Winter Melon', type:'瓜果', temp:'25-30°C', days:'90-120天', water:'每2天', notes:'大型蔬菜，需要充足生长空间，耐储存',
     zones:{5:{sow:'3月室内',trans:'5月底',harvest:'9月'},6:{sow:'3月室内',trans:'5月初',harvest:'8-9月'},7:{sow:'2月室内',trans:'4月底',harvest:'8月'},8:{sow:'2月室内',trans:'3月',harvest:'7月'},9:{sow:'1月室内',trans:'2月',harvest:'6月'}},
-    seeds:{amz:'https://www.amazon.com/s?k=winter+melon+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=winter+melon',evg:'https://www.evergreenseeds.com/search?q=winter+melon'}},
+    seeds:{amz:'https://www.amazon.com/s?k=winter+melon+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=winter+melon'}},
   { name:'茄子', en:'Eggplant', type:'瓜果', temp:'22-28°C', days:'75-90天', water:'每2天', notes:'比番茄更耐热，需长育苗期，修枝促丰产',
     zones:{5:{sow:'3月室内',trans:'5月底',harvest:'8-9月'},6:{sow:'2月室内',trans:'5月中',harvest:'7-9月'},7:{sow:'2月室内',trans:'4月底',harvest:'7-9月'},8:{sow:'1月室内',trans:'3月',harvest:'5-8月'},9:{sow:'1月室内',trans:'2-3月',harvest:'5-8月'}},
-    seeds:{amz:'https://www.amazon.com/s?k=asian+eggplant+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=eggplant',evg:'https://www.evergreenseeds.com/search?q=eggplant'}},
+    seeds:{amz:'https://www.amazon.com/s?k=asian+eggplant+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=eggplant'}},
   { name:'辣椒', en:'Chili Pepper', type:'瓜果', temp:'20-28°C', days:'80-100天', water:'每2天', notes:'育苗期最长，建议比番茄早2-3周播种',
     zones:{5:{sow:'2月室内',trans:'5月底',harvest:'8-9月'},6:{sow:'2月室内',trans:'5月中',harvest:'7-9月'},7:{sow:'1月室内',trans:'4月底',harvest:'7-9月'},8:{sow:'1月室内',trans:'3月',harvest:'5-8月'},9:{sow:'12月室内',trans:'2月',harvest:'5-8月'}},
-    seeds:{amz:'https://www.amazon.com/s?k=chinese+chili+pepper+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=pepper',evg:'https://www.evergreenseeds.com/search?q=pepper'}},
+    seeds:{amz:'https://www.amazon.com/s?k=chinese+chili+pepper+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=pepper'}},
   { name:'豆角', en:'Long Bean', type:'豆类', temp:'20-30°C', days:'60-75天', water:'每2天', notes:'直播为主，忌移根，豆科植物自身固氮',
     zones:{5:{sow:'5月直播',trans:'—',harvest:'7-8月'},6:{sow:'5月直播',trans:'—',harvest:'7-8月'},7:{sow:'4月直播',trans:'—',harvest:'6-8月'},8:{sow:'3-4月直播',trans:'—',harvest:'5-7月'},9:{sow:'3月直播',trans:'—',harvest:'5-7月'}},
-    seeds:{amz:'https://www.amazon.com/s?k=yard+long+bean+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=long+bean',evg:'https://www.evergreenseeds.com/search?q=long+bean'}},
+    seeds:{amz:'https://www.amazon.com/s?k=yard+long+bean+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=long+bean'}},
   { name:'豌豆', en:'Snow Pea', type:'豆类', temp:'10-18°C', days:'55-70天', water:'每2天', notes:'耐寒，早春直播效果好，不耐热，夏来前收完',
     zones:{5:{sow:'4月直播',trans:'—',harvest:'6月'},6:{sow:'3月直播',trans:'—',harvest:'5-6月'},7:{sow:'2-3月直播',trans:'—',harvest:'4-5月'},8:{sow:'1-2月直播',trans:'—',harvest:'3-4月'},9:{sow:'1月直播',trans:'—',harvest:'3月'}},
-    seeds:{amz:'https://www.amazon.com/s?k=snow+pea+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=snow+pea',evg:'https://www.evergreenseeds.com/search?q=snow+pea'}},
+    seeds:{amz:'https://www.amazon.com/s?k=snow+pea+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=snow+pea'}},
   { name:'毛豆', en:'Edamame', type:'豆类', temp:'20-28°C', days:'75-90天', water:'每2天', notes:'直播不耐移栽，分批播种延长采收期',
     zones:{5:{sow:'5月直播',trans:'—',harvest:'8月'},6:{sow:'5月直播',trans:'—',harvest:'7-8月'},7:{sow:'4月直播',trans:'—',harvest:'7月'},8:{sow:'3-4月直播',trans:'—',harvest:'6月'},9:{sow:'3月直播',trans:'—',harvest:'5-6月'}},
-    seeds:{amz:'https://www.amazon.com/s?k=edamame+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=edamame',evg:'https://www.evergreenseeds.com/search?q=edamame'}},
+    seeds:{amz:'https://www.amazon.com/s?k=edamame+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=edamame'}},
   { name:'韭菜', en:'Chinese Chive', type:'葱蒜', temp:'15-25°C', days:'90天+', water:'每3天', notes:'多年生，割后可复发，割后3天内追高氮肥',
     zones:{5:{sow:'3月室内',trans:'5月',harvest:'7月起'},6:{sow:'2月室内',trans:'4月',harvest:'6月起'},7:{sow:'2月室内',trans:'3-4月',harvest:'5月起'},8:{sow:'1月室内',trans:'3月',harvest:'4月起'},9:{sow:'1月室内',trans:'2-3月',harvest:'4月起'}},
-    seeds:{amz:'https://www.amazon.com/s?k=chinese+chive+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=chive',evg:'https://www.evergreenseeds.com/search?q=chives'}},
+    seeds:{amz:'https://www.amazon.com/s?k=chinese+chive+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=chive'}},
   { name:'大葱', en:'Green Onion', type:'葱蒜', temp:'10-25°C', days:'90-120天', water:'每3天', notes:'耐寒耐热，全年可种，葱白发育期减氮增钾',
     zones:{5:{sow:'3月室内',trans:'5月',harvest:'8-9月'},6:{sow:'2月室内',trans:'4月',harvest:'7-8月'},7:{sow:'2月室内',trans:'3-4月',harvest:'6-7月'},8:{sow:'1月室内',trans:'3月',harvest:'5-6月'},9:{sow:'1月室内',trans:'2-3月',harvest:'4-5月'}},
-    seeds:{amz:'https://www.amazon.com/s?k=chinese+green+onion+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=green+onion',evg:'https://www.evergreenseeds.com/search?q=green+onion'}},
+    seeds:{amz:'https://www.amazon.com/s?k=chinese+green+onion+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=green+onion'}},
   { name:'香菜', en:'Cilantro', type:'香草', temp:'15-20°C', days:'45-60天', water:'每2天', notes:'不耐热，需凉季种植，温度高时容易抽薹',
     zones:{5:{sow:'4月直播',trans:'—',harvest:'6月'},6:{sow:'3月直播',trans:'—',harvest:'5月'},7:{sow:'3月直播',trans:'—',harvest:'4-5月'},8:{sow:'2-3月直播',trans:'—',harvest:'4月'},9:{sow:'2月直播',trans:'—',harvest:'3-4月'}},
-    seeds:{amz:'https://www.amazon.com/s?k=cilantro+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=cilantro',evg:'https://www.evergreenseeds.com/search?q=cilantro'}},
+    seeds:{amz:'https://www.amazon.com/s?k=cilantro+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=cilantro'}},
   { name:'芹菜', en:'Chinese Celery', type:'叶菜', temp:'15-20°C', days:'90-110天', water:'每2天', notes:'耐阴，香气浓郁，适合煮汤和炒菜',
     zones:{5:{sow:'3月室内',trans:'5月',harvest:'7-8月'},6:{sow:'2月室内',trans:'4月',harvest:'6-7月'},7:{sow:'2月室内',trans:'3-4月',harvest:'5-6月'},8:{sow:'1月室内',trans:'3月',harvest:'4-5月'},9:{sow:'1月室内',trans:'2月',harvest:'3-4月'}},
-    seeds:{amz:'https://www.amazon.com/s?k=chinese+celery+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=celery',evg:'https://www.evergreenseeds.com/search?q=celery'}},
+    seeds:{amz:'https://www.amazon.com/s?k=chinese+celery+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com/search.html?q=celery'}},
   { name:'土豆', en:'Potato', type:'根茎类', temp:'15-20°C', days:'70-90天', water:'每2天', notes:'用种薯直播，出苗前保持土壤微湿，叶片发黄后停水，起垄种植防积水，避免块茎暴露阳光变绿',
     zones:{5:{sow:'4月直播',trans:'—',harvest:'7-8月'},6:{sow:'3-4月直播',trans:'—',harvest:'6-8月'},7:{sow:'3月直播',trans:'—',harvest:'5-7月'},8:{sow:'2-3月直播',trans:'—',harvest:'4-6月'},9:{sow:'1-2月直播',trans:'—',harvest:'3-5月'}},
-    seeds:{amz:'https://www.amazon.com/s?k=seed+potatoes&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com',evg:'https://www.evergreenseeds.com'}},
+    seeds:{amz:'https://www.amazon.com/s?k=seed+potatoes&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com'}},
   { name:'玉米', en:'Sweet Corn', type:'瓜果', temp:'20-30°C', days:'70-100天', water:'每天', notes:'需大量空间，至少种4行以上确保自然授粉，玉米须变棕色即可采收，须当天食用最甜',
     zones:{5:{sow:'5月直播',trans:'—',harvest:'8-9月'},6:{sow:'4-5月直播',trans:'—',harvest:'7-9月'},7:{sow:'4月直播',trans:'—',harvest:'7-8月'},8:{sow:'3-4月直播',trans:'—',harvest:'6-8月'},9:{sow:'3月直播',trans:'—',harvest:'5-7月'}},
-    seeds:{amz:'https://www.amazon.com/s?k=sweet+corn+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com',evg:'https://www.evergreenseeds.com'}}
+    seeds:{amz:'https://www.amazon.com/s?k=sweet+corn+seeds&tag=veggiecalenda-20',kit:'https://www.kitazawaseed.com'}}
 ];
 
 const fertData = [
@@ -800,11 +800,6 @@ const seedShops = [
     badge:'亚洲品种最全', badgeColor:'bg-green-100 text-green-700',
     url:'https://www.kitazawaseed.com',
     items:['苦瓜','丝瓜','茼蒿','苋菜','空心菜','豆角','上海青']},
-  { name:'Evergreen Seeds', logo:'🌿', tag:'华人常用', tagEn:'Chinese-run Store',
-    desc:'华人经营，专注亚洲蔬菜，品种地道，许多在国内常见的菜这里都有',
-    badge:'华人推荐', badgeColor:'bg-blue-100 text-blue-700',
-    url:'https://www.evergreenseeds.com',
-    items:['冬瓜','韭菜','大葱','空心菜','芹菜','苋菜']}
 ];
 
 // =============================================
@@ -938,12 +933,6 @@ function showModal(name) {
             <span class="text-lg">🏪</span>
             <span class="text-xs font-medium text-green-700">Kitazawa</span>
             <span class="text-xs text-green-400">亚洲专家</span>
-          </a>
-          <a href="${v.seeds.evg}" target="_blank" rel="noopener"
-             class="flex flex-col items-center gap-1 bg-teal-50 border border-teal-200 rounded-xl py-2.5 px-1 hover:bg-teal-100 transition">
-            <span class="text-lg">🌿</span>
-            <span class="text-xs font-medium text-teal-700">Evergreen</span>
-            <span class="text-xs text-teal-400">华人推荐</span>
           </a>
         </div>
       </div>` : ''}
@@ -1250,7 +1239,7 @@ function generateMyPlan() {
 // =============================================
 const faqData = [
   { q:'空心菜、苦瓜这类蔬菜在美国哪里能买到种子？',
-    a:'Kitazawa Seed 和 Evergreen Seeds 是最专业的亚洲蔬菜种子店，空心菜、苦瓜、苋菜等品种基本都有。Amazon 也可以找到，搜索英文名（如 "water spinach seeds"、"bitter melon seeds"）。当地 H-Mart、99 Ranch、T&T 等亚洲超市的种子货架也常有货，价格最实惠。'},
+    a:'Kitazawa Seed（现已并入 True Leaf Market）是最专业的亚洲蔬菜种子店，空心菜、苦瓜、苋菜等品种基本都有，网址 trueleafmarket.com。Amazon 也可以找到，搜索英文名（如 "water spinach seeds"、"bitter melon seeds"）。当地 H-Mart、99 Ranch、T&T 等亚洲超市的种子货架也常有货，价格最实惠。'},
   { q:'Zone 5 生长季那么短，苦瓜和丝瓜种得出来吗？',
     a:'可以！关键是提前育苗——苦瓜建议 3 月初就在室内育苗（生长期约 80-100 天），等最后一次霜冻后立刻移植。地面铺黑色地膜保温、选最热的南向位置，都能帮助争取热量。建议选生长期较短的品种（如白苦瓜），收获问题不大。'},
   { q:'为什么我的香菜总是种了没多久就抽薹开花？',
