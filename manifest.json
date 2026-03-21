@@ -1,0 +1,27 @@
+{
+  "name": "种菜日历 · Veggie Calendar",
+  "short_name": "种菜日历",
+  "description": "海外华人种菜指南 · 播种时间、施肥方案、购种推荐",
+  "start_url": "/veggie-calendar/",
+  "scope": "/veggie-calendar/",
+  "display": "standalone",
+  "background_color": "#f0fdf4",
+  "theme_color": "#16a34a",
+  "lang": "zh-CN",
+  "orientation": "portrait-primary",
+  "categories": ["lifestyle", "food", "education"],
+  "icons": [
+    {
+      "src": "/veggie-calendar/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/veggie-calendar/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

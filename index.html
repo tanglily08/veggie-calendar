@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>种菜日历 · Veggie Calendar for Chinese Families</title>
+  <!-- PWA -->
+  <link rel="manifest" href="/veggie-calendar/manifest.json">
+  <meta name="theme-color" content="#16a34a">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="种菜日历">
+  <link rel="apple-touch-icon" href="/veggie-calendar/icon-192.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -1249,6 +1257,15 @@ renderFAQ();
   const el = document.getElementById('heroMonth');
   if (el) el.textContent = '\uD83D\uDDD3\uFE0F 现在是 ' + months[m] + ' · ' + tips[m];
 })();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/veggie-calendar/sw.js')
+      .then(() => console.log('种菜日历 PWA 已就绪'))
+      .catch(err => console.log('SW 注册失败:', err));
+  });
+}
 </script>
 </body>
 </html>
