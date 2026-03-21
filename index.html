@@ -161,6 +161,7 @@
       <button class="filter-btn px-4 py-1.5 rounded-full border border-green-700 text-sm text-green-700" data-type="豆类" onclick="filterVeggies(this,'豆类')">🫘 豆类</button>
       <button class="filter-btn px-4 py-1.5 rounded-full border border-green-700 text-sm text-green-700" data-type="葱蒜" onclick="filterVeggies(this,'葱蒜')">🧅 葱蒜</button>
       <button class="filter-btn px-4 py-1.5 rounded-full border border-green-700 text-sm text-green-700" data-type="香草" onclick="filterVeggies(this,'香草')">🌿 香草</button>
+      <button class="filter-btn px-4 py-1.5 rounded-full border border-green-700 text-sm text-green-700" data-type="根茎类" onclick="filterVeggies(this,'根茎类')">🥔 根茎</button>
     </div>
 
     <!-- Card grid -->
@@ -305,7 +306,7 @@
     </div>
     <div class="space-y-3" id="faqAccordion"></div>
     <div class="mt-8 text-center">
-      <p class="text-sm text-gray-500">还有其他问题？<a href="mailto:tanglily080299@gmail.com" class="text-green-700 hover:underline font-medium">发邮件告诉我们 →</a></p>
+      <p class="text-sm text-gray-500">还有其他问题？<a href="https://github.com/tanglily08/veggie-calendar/issues/new?title=问题反馈" target="_blank" rel="noopener" class="text-green-700 hover:underline font-medium">提交反馈 →</a></p>
     </div>
   </div>
 </section>
@@ -317,7 +318,7 @@
     <p class="font-bold text-white text-lg">种菜日历 · Veggie Calendar</p>
     <p class="text-sm mt-1">专为海外华人打造的中国蔬菜种植指南</p>
     <p class="text-xs mt-4 text-green-400">购种推荐含联盟佣金链接 · Seed shopping links may include affiliate commissions</p>
-    <p class="text-xs mt-1 text-green-400">联系我们：<a href="mailto:tanglily080299@gmail.com" class="hover:text-white transition underline">tanglily080299@gmail.com</a></p>
+
     <div class="mt-6 flex justify-center gap-6 text-xs text-green-400">
       <button onclick="scrollToSection('gallery')" class="hover:text-white">蔬菜图鉴</button>
       <button onclick="scrollToSection('calendar')" class="hover:text-white">播种指南</button>
@@ -613,7 +614,13 @@ const veggies = [
     seeds:{amz:'https://www.amazon.com/s?k=cilantro+seeds',kit:'https://www.kitazawaseed.com/search.html?q=cilantro',evg:'https://www.evergreenseeds.com/search?q=cilantro'}},
   { name:'芹菜', en:'Chinese Celery', type:'叶菜', temp:'15-20°C', days:'90-110天', water:'每2天', notes:'耐阴，香气浓郁，适合煮汤和炒菜',
     zones:{5:{sow:'3月室内',trans:'5月',harvest:'7-8月'},6:{sow:'2月室内',trans:'4月',harvest:'6-7月'},7:{sow:'2月室内',trans:'3-4月',harvest:'5-6月'},8:{sow:'1月室内',trans:'3月',harvest:'4-5月'},9:{sow:'1月室内',trans:'2月',harvest:'3-4月'}},
-    seeds:{amz:'https://www.amazon.com/s?k=chinese+celery+seeds',kit:'https://www.kitazawaseed.com/search.html?q=celery',evg:'https://www.evergreenseeds.com/search?q=celery'}}
+    seeds:{amz:'https://www.amazon.com/s?k=chinese+celery+seeds',kit:'https://www.kitazawaseed.com/search.html?q=celery',evg:'https://www.evergreenseeds.com/search?q=celery'}},
+  { name:'土豆', en:'Potato', type:'根茎类', temp:'15-20°C', days:'70-90天', water:'每2天', notes:'用种薯直播，出苗前保持土壤微湿，叶片发黄后停水，起垄种植防积水，避免块茎暴露阳光变绿',
+    zones:{5:{sow:'4月直播',trans:'—',harvest:'7-8月'},6:{sow:'3-4月直播',trans:'—',harvest:'6-8月'},7:{sow:'3月直播',trans:'—',harvest:'5-7月'},8:{sow:'2-3月直播',trans:'—',harvest:'4-6月'},9:{sow:'1-2月直播',trans:'—',harvest:'3-5月'}},
+    seeds:{amz:'https://www.amazon.com/s?k=seed+potatoes',kit:'https://www.kitazawaseed.com',evg:'https://www.evergreenseeds.com'}},
+  { name:'玉米', en:'Sweet Corn', type:'瓜果', temp:'20-30°C', days:'70-100天', water:'每天', notes:'需大量空间，至少种4行以上确保自然授粉，玉米须变棕色即可采收，须当天食用最甜',
+    zones:{5:{sow:'5月直播',trans:'—',harvest:'8-9月'},6:{sow:'4-5月直播',trans:'—',harvest:'7-9月'},7:{sow:'4月直播',trans:'—',harvest:'7-8月'},8:{sow:'3-4月直播',trans:'—',harvest:'6-8月'},9:{sow:'3月直播',trans:'—',harvest:'5-7月'}},
+    seeds:{amz:'https://www.amazon.com/s?k=sweet+corn+seeds',kit:'https://www.kitazawaseed.com',evg:'https://www.evergreenseeds.com'}}
 ];
 
 const fertData = [
@@ -752,7 +759,7 @@ let currentFilter = 'all';
 // HELPERS
 // =============================================
 function typeEmoji(type) {
-  return {叶菜:'🥬',瓜果:'🍅',豆类:'🫘',葱蒜:'🧅',香草:'🌿'}[type] || '🌱';
+  return {叶菜:'🥬',瓜果:'🍅',豆类:'🫘',葱蒜:'🧅',香草:'🌿',根茎类:'🥔'}[type] || '🌱';
 }
 function typeColor(type) {
   return {
@@ -760,7 +767,8 @@ function typeColor(type) {
     瓜果:'bg-red-100 text-red-700',
     豆类:'bg-yellow-100 text-yellow-700',
     葱蒜:'bg-purple-100 text-purple-700',
-    香草:'bg-teal-100 text-teal-700'
+    香草:'bg-teal-100 text-teal-700',
+    根茎类:'bg-amber-100 text-amber-700'
   }[type] || 'bg-gray-100 text-gray-600';
 }
 
