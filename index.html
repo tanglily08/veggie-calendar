@@ -12,6 +12,14 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="种菜日历">
   <link rel="apple-touch-icon" href="/veggie-calendar/icon-192.png">
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -1233,9 +1241,78 @@ function generateMyPlan() {
         </button>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">${cards}</div>
+      ${generateShoppingList(selected)}
     </div>`;
   document.getElementById('myPlanResult').classList.remove('hidden');
   setTimeout(() => document.getElementById('myPlanResult').scrollIntoView({behavior:'smooth'}), 100);
+}
+
+// =============================================
+// AMAZON SHOPPING LIST (购物清单)
+// =============================================
+function generateShoppingList(selectedVeggies) {
+  const TAG = 'veggiecalenda-20';
+  // Seed links for selected veggies
+  const seedItems = selectedVeggies.map(v => {
+    return \`<a href="\${v.seeds.amz}" target="_blank" rel="noopener" class="flex items-center justify-between p-3 bg-white rounded-xl border border-gray-100 hover:border-green-300 hover:shadow-sm transition group">
+      <div class="flex items-center gap-3 min-w-0">
+        <span class="text-lg shrink-0">🌱</span>
+        <div class="min-w-0">
+          <div class="text-sm font-medium text-gray-800 truncate">\${v.name} \${v.en} 种子</div>
+        </div>
+      </div>
+      <span class="text-xs text-green-600 group-hover:text-green-700 font-medium shrink-0 ml-2">Amazon →</span>
+    </a>\`;
+  }).join('');
+
+  // Essential supplies recommendations
+  const supplies = [
+    { name:'育苗盘 72格 Seed Starting Tray', emoji:'🌱', url:\`https://www.amazon.com/s?k=seed+starting+tray+72+cell&tag=\${TAG}\` },
+    { name:'育苗土 Seed Starting Mix', emoji:'🪴', url:\`https://www.amazon.com/s?k=seed+starting+mix+organic&tag=\${TAG}\` },
+    { name:'LED 补光灯 Grow Light', emoji:'💡', url:\`https://www.amazon.com/s?k=led+grow+light+seedlings&tag=\${TAG}\` },
+    { name:'Espoma Garden-tone 有机蔬菜肥', emoji:'🧪', url:\`https://www.amazon.com/dp/B08DCLXYNL?tag=\${TAG}\` },
+    { name:'园艺工具套装 Garden Tool Set', emoji:'🧰', url:\`https://www.amazon.com/s?k=garden+tool+set+vegetable&tag=\${TAG}\` },
+    { name:'Fabric Grow Bags 种植袋', emoji:'🛍️', url:\`https://www.amazon.com/s?k=fabric+grow+bags+vegetable+garden&tag=\${TAG}\` },
+  ];
+
+  const supplyItems = supplies.map(s => {
+    return \`<a href="\${s.url}" target="_blank" rel="noopener" class="flex items-center justify-between p-3 bg-white rounded-xl border border-gray-100 hover:border-amber-300 hover:shadow-sm transition group">
+      <div class="flex items-center gap-3 min-w-0">
+        <span class="text-lg shrink-0">\${s.emoji}</span>
+        <div class="text-sm font-medium text-gray-800 truncate">\${s.name}</div>
+      </div>
+      <span class="text-xs text-amber-600 group-hover:text-amber-700 font-medium shrink-0 ml-2">Amazon →</span>
+    </a>\`;
+  }).join('');
+
+  const hasIndoorSow = selectedVeggies.some(v => {
+    const zoneData = Object.values(v.zones)[0];
+    return zoneData && zoneData.sow && zoneData.sow.includes('室内');
+  });
+
+  return \`
+    <div class="mt-6 pt-6 border-t border-gray-100">
+      <h4 class="font-bold text-green-900 text-base mb-1">🛒 配套购物清单</h4>
+      <p class="text-xs text-gray-400 mb-4">根据你选的 \${selectedVeggies.length} 种蔬菜，一键购齐所需种子和工具</p>
+
+      <div class="mb-4">
+        <div class="text-xs font-semibold text-green-700 uppercase tracking-wide mb-2">Seeds · 种子</div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          \${seedItems}
+        </div>
+      </div>
+
+      <div>
+        <div class="text-xs font-semibold text-amber-700 uppercase tracking-wide mb-2">\${hasIndoorSow ? 'Indoor Sowing Essentials · 室内育苗必备' : 'Garden Essentials · 种菜必备工具'}</div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          \${supplyItems}
+        </div>
+      </div>
+
+      <div class="mt-4 text-xs text-gray-400 text-center">
+        💡 小贴士：Amazon Prime 会员可享 2 日免费配送 · 链接含推广佣金，不影响您的购买价格
+      </div>
+    </div>\`;
 }
 
 // =============================================
@@ -1251,13 +1328,13 @@ const faqData = [
   { q:'番茄要不要掐尖和打侧芽？',
     a:'建议打掉腋芽（也叫侧芽或 sucker），即主茎和叶子之间长出的小嫩芽。尤其是无限生长型番茄（大多数亚洲品种），不打芽会枝叶过多、产量下降。每隔 1-2 周检查一次，小芽用手直接掰掉最干净。有限型（determinate）番茄则不需要频繁整枝。'},
   { q:'什么是室内育苗？在家里需要什么设备？',
-    a:'室内育苗是在户外还太冷时，提前在家里把种子种到苗盘里，等天气暖和再移植出去。基础配置：育苗盘（seed tray）+ 种子专用育苗土（seed starting mix）+ 补光灯（普通 LED 植物灯即可）。放在灯下每天 12-16 小时，保持土壤湿润。普通桌面植物灯 $20 左右就够用，不需要买很贵的设备。'},
+    a:'室内育苗是在户外还太冷时，提前在家里把种子种到苗盘里，等天气暖和再移植出去。基础配置：<a href="https://www.amazon.com/s?k=seed+starting+tray+72+cell&tag=veggiecalenda-20" target="_blank" class="text-green-600 underline">育苗盘 seed tray</a> + <a href="https://www.amazon.com/s?k=seed+starting+mix+organic&tag=veggiecalenda-20" target="_blank" class="text-green-600 underline">种子专用育苗土 seed starting mix</a> + <a href="https://www.amazon.com/s?k=led+grow+light+seedlings&tag=veggiecalenda-20" target="_blank" class="text-green-600 underline">补光灯 LED grow light</a>。放在灯下每天 12-16 小时，保持土壤湿润。普通桌面植物灯 $20 左右就够用，不需要买很贵的设备。'},
   { q:'我在加拿大，这里的 Zone 数据和播种时间适用吗？',
     a:'完全适用！我们的城市数据库已收录加拿大主要城市，包括多伦多（Zone 6）、温哥华（Zone 8）、卡尔加里（Zone 3-4）、蒙特利尔（Zone 5）等。直接在顶部城市搜索框输入城市名即可自动识别 Zone。'},
   { q:'有机肥和化肥有什么区别，种菜用哪种好？',
     a:'化肥（如 Miracle-Gro）见效快、价格低，但长期使用会板结土壤、破坏有益微生物。有机肥（如 Espoma、Dr. Earth）释放缓慢但能持续改善土壤结构，种出来的菜口感和营养价值更好。自家吃的菜推荐有机肥，也不会"烧苗"。本站施肥指南全部推荐有机肥品牌。'},
   { q:'阳台或花盆里可以种这些蔬菜吗？',
-    a:'完全可以！叶菜类（生菜、菠菜、小白菜、香菜）适合 1-3 加仑小盆，是阳台种菜首选；韭菜、大葱种在长条花盆里可以反复割收；番茄、黄瓜、茄子需要至少 5 加仑深桶。阳台种植两个关键：① 浇水频率要比地栽高（花盆干得很快）；② 每 1-2 周追施一次液肥补充营养。南向阳台效果最好。'}
+    a:'完全可以！叶菜类（生菜、菠菜、小白菜、香菜）适合 1-3 加仑小盆，是阳台种菜首选；韭菜、大葱种在长条花盆里可以反复割收；番茄、黄瓜、茄子需要至少 <a href="https://www.amazon.com/s?k=5+gallon+fabric+grow+bags+vegetable&tag=veggiecalenda-20" target="_blank" class="text-green-600 underline">5 加仑布质种植袋（grow bag）</a>。阳台种植两个关键：① 浇水频率要比地栽高（花盆干得很快）；② 每 1-2 周追施一次 <a href="https://www.amazon.com/dp/B00LUT5E74?tag=veggiecalenda-20" target="_blank" class="text-green-600 underline">有机液肥</a> 补充营养。南向阳台效果最好。'}
 ];
 
 function renderFAQ() {
